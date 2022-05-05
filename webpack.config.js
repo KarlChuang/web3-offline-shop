@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = (_env, argv) => {
   const isProduction = argv.mode === "production";
@@ -21,6 +22,7 @@ module.exports = (_env, argv) => {
           use: {
             loader: "babel-loader",
             options: {
+              presets: ['@babel/preset-env', '@babel/preset-react'],
               cacheDirectory: true,
               cacheCompression: false,
               envName: isProduction ? "production" : "development"
@@ -36,7 +38,11 @@ module.exports = (_env, argv) => {
     resolve: {
       extensions: [".js", ".jsx"]
     },
-    plugins: [],
+    plugins: [
+      new HtmlWebpackPlugin({
+        template: path.join(__dirname, "public", "index.html"),
+      }),
+    ],
   };
   return config;
 };
