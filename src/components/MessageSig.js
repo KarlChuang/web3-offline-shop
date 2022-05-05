@@ -5,11 +5,11 @@ const MessageSig = ({
   message,
   address,
   signature,
-  handleStateChange,
+  handleInput,
   handleOnSig,
 }) => (
   <Rootwrapper>
-    <MsgInput value={message} onChange={(e) => handleStateChange('message', e.target.value)} />
+    <MsgInput value={message} onChange={(e) => handleInput(e.target.value)} />
     <Msg>message: "{message}"</Msg>
     <button onClick={handleOnSig}>SIGN</button>
     <Msg>address: "{address}"</Msg>
