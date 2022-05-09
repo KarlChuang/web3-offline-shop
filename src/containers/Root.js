@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ethers } from 'ethers';
+import axios from 'axios';
 
-import MessageSig from '../components/MessageSig';
 import MessageVer from '../components/MessageVer';
 
 const signMessage = async (msg) => {
@@ -16,44 +16,32 @@ const signMessage = async (msg) => {
     const address = await signer.getAddress();
     return { address, signature };
   } catch (err) {
-    setError(err.message);
-  }
-}
-
-const verifySig = async (message, address, signature) => {
-  try {
-    const signerAddr = await ethers.utils.verifyMessage(message, signature);
-    return (address == signerAddr);
-  } catch (err) {
     console.log(err);
   }
 }
 
-
 const Root = () => {
-  const [message, setMsg] = useState('');
-  const [address, setaddr] = useState('');
-  const [signature, setSig] = useState('');
-  const [verify, setVerify] = useState(false);
+  const [verify, setVerify] = useState('Invalid');
+
+  const handleOnVerify = async () => {
+    try {
+      setVerify('');
+      const message = new Date().toString();
+      const { address, signature } = await signMessage(message);
+
+      const res = await axios.post('/check-address', { address, message, signature });
+      setVerify(res.data.valid ? 'Valid' : 'Invalid');
+    } catch (err) {
+      console.log(err);
+      setVerify('Invalid');
+    }
+  };
+  
   return (
     <Rootwrapper>
-      <MessageSig
-        message={message}
-        address={address}
-        signature={signature}
-        handleInput={(value) => setMsg(value)}
-        handleOnSig={async () => {
-          const { address, signature } = await signMessage(message);
-          setaddr(address);
-          setSig(signature);
-        }}
-      />
       <MessageVer
         verify={verify}
-        handleOnVer={async () => {
-          const valid = await verifySig(message, address, signature);
-          setVerify(valid);
-        }}
+        handleOnVer={handleOnVerify}
       />
     </Rootwrapper>
   );
