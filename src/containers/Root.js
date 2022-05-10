@@ -6,18 +6,14 @@ import axios from 'axios';
 import MessageVer from '../components/MessageVer';
 
 const signMessage = async (msg) => {
-  try {
-    if (!window.ethereum)
-      throw new Error('No wallet found!');
-    await window.ethereum.send('eth_requestAccounts');
-    const provider = new ethers.providers.Web3Provider(window.ethereum);
-    const signer = provider.getSigner();
-    const signature = await signer.signMessage(msg);
-    const address = await signer.getAddress();
-    return { address, signature };
-  } catch (err) {
-    console.log(err);
-  }
+  if (!window.ethereum)
+    throw new Error('No wallet found!');
+  await window.ethereum.send('eth_requestAccounts');
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const signer = provider.getSigner();
+  const signature = await signer.signMessage(msg);
+  const address = await signer.getAddress();
+  return { address, signature };
 }
 
 const Root = () => {
@@ -36,7 +32,7 @@ const Root = () => {
     } catch (err) {
       console.log(err);
       setVerify('Invalid');
-      setMsg('Signing error');
+      setMsg(err.message);
     }
   };
   
