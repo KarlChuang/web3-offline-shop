@@ -22,6 +22,7 @@ const signMessage = async (msg) => {
 
 const Root = () => {
   const [verify, setVerify] = useState('Invalid');
+  const [verifyMsg, setMsg] = useState('Click to verify');
 
   const handleOnVerify = async () => {
     try {
@@ -31,9 +32,11 @@ const Root = () => {
 
       const res = await axios.post('/check-address', { address, message, signature });
       setVerify(res.data.valid ? 'Valid' : 'Invalid');
+      setMsg(res.data.message);
     } catch (err) {
       console.log(err);
       setVerify('Invalid');
+      setMsg('Signing error');
     }
   };
   
@@ -41,6 +44,7 @@ const Root = () => {
     <Rootwrapper>
       <MessageVer
         verify={verify}
+        verifyMsg={verifyMsg}
         handleOnVer={handleOnVerify}
       />
     </Rootwrapper>

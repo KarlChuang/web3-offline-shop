@@ -3,6 +3,7 @@ import styled, { keyframes } from 'styled-components';
 
 const MessageVer = ({
   verify,
+  verifyMsg,
   handleOnVer,
 }) => (
   <Rootwrapper valid={verify == 'Valid'}>
@@ -14,7 +15,10 @@ const MessageVer = ({
           <LoadingPoint delay={0.8} />
         </Loading>
       ) : (
-        <Btn onClick={handleOnVer}>{verify}</Btn>
+        <FlexCol>
+          <Btn onClick={handleOnVer}>{verify}</Btn>
+          <Message>{verifyMsg}</Message>
+        </FlexCol>
       )
     }
   </Rootwrapper>
@@ -32,6 +36,20 @@ const Rootwrapper = styled.div`
   flex-direction: column;
   justify-content: space-around;
   position: relative;
+`;
+
+const FlexCol = styled.div`
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
+
+const Message = styled.div`
+  color: white;
+  word-break: break-word;
+  margin-top: 30px;
 `;
 
 const Btn = styled.button`

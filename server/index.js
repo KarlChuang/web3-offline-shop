@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const { ethers } = require('ethers');
+const whiteList = require('../config/whiteList.json');
 
 const port = process.env.PORT;
 
@@ -16,8 +17,16 @@ for (let i = 0; i < router.length; i += 1) {
 app.post('/check-address', async (req, res) => {
   const { address, message, signature } = req.body;
   const signerAddr = await ethers.utils.verifyMessage(message, signature);
-  // TODO: check address in white list
-  res.json({ valid: (address == signerAddr) });
+
+  if (address != signerAddr)
+    res.json({ valid: false, message: 'Mismatch signature and address' });
+  else if (!whiteList.includes(address))
+    res.json({ valid: false, message: 'Address not in white List' });
+  else if (new Date().getTime() - new Date(message).getTime() >= 30000) {
+    res.json({ valid: false, message: 'Timestamp expired' });
+  } else {
+    res.json({ valid: true, message: '(͠≖ ͜ʖ͠≖)👌' });
+  }
 });
 
 app.listen(port || 5000, async () => {
