@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 
 app.use('/', express.static(path.resolve(__dirname, '..', 'dist')));
-app.get('/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'bundle.js')));
+app.get('*/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'bundle.js')));
 app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'index.html')));
 
 app.post('/api/check-address', async (req, res) => {
