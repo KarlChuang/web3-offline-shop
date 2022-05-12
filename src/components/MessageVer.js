@@ -1,7 +1,10 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
+// import { useParams } from 'react-router-dom'
 
 const MessageVer = ({
+  id,
+  name,
   verify,
   verifyMsg,
   handleOnVer,
@@ -15,35 +18,35 @@ const MessageVer = ({
           <LoadingPoint delay={0.8} />
         </Loading>
       ) : (
-        <FlexCol>
-          <Btn onClick={handleOnVer}>{verify}</Btn>
+        <Display>
+          <Btn valid={verify == 'Valid'} onClick={handleOnVer}>{name}</Btn>
           <Message>{verifyMsg}</Message>
-        </FlexCol>
+        </Display>
       )
     }
   </Rootwrapper>
 );
+
 
 export default MessageVer;
 
 const Rootwrapper = styled.div`
   background-color: ${({ valid }) => (valid ? '#3e5d19' : '#6b0600')};
   width: 100%;
-  height: inherit;
+  flex-grow: 1;
   text-align: center;
   align-items: center;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-start;
   position: relative;
+  overflow: scroll;
 `;
 
-const FlexCol = styled.div`
-  text-align: center;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+const Display = styled.div`
+  width: 80%;
+  margin-top: 50px;
+  margin-bottom: 50px;
 `;
 
 const Message = styled.div`
@@ -53,38 +56,24 @@ const Message = styled.div`
 `;
 
 const Btn = styled.button`
-  color: white;
-  background: transparent;
-  height: 60px;
-  width: 120px;
+  color: ${({ valid }) => (valid ? '#3e5d19' : '#6b0600')};
+  background: white;
+  height: 300px;
+  width: 100%;
   padding: 10px 20px;
   border-color: white;
 	border-radius: 6px;
 	border-width: 2px;
 	border-style: solid;
-	font-size: 20px;
+	font-size: 30px;
+  font-weight: 900;
 	font-family: 'Ubuntu', sans-serif;
 	cursor: pointer;
 	transition: 0.25s ease;
   position: relative;
-	overflow: hidden;
-  &:after {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    background: white;
-    width: 150%;
-    padding-top: 150%;
-    transform: rotate(25deg);
-    top: -100%;
-    left: -190%;
-    transition: 0.5s ease;
-  }
-  &:hover {
-    &:after {
-      left: 130%;
-    }
+  user-select: none;
+  &:active {
+    background-color: ${({ valid }) => (valid ? '#3e5d19' : '#6b0600')};
   }
 `;
 
@@ -118,6 +107,7 @@ const LoadingPoint = styled.div`
 `;
 
 const Loading = styled.div`
+  flex-grow: 1;
   margin: 0px;
   width: 100%;
   height: 60px;

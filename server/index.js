@@ -8,13 +8,11 @@ const port = process.env.PORT;
 const app = express();
 app.use(express.json());
 
-const router = ['/'];
-for (let i = 0; i < router.length; i += 1) {
-  app.use(router[i], express.static(path.resolve(__dirname, '..', 'public')));
-  app.use(router[i], express.static(path.resolve(__dirname, '..', 'dist')));
-}
+app.use('/', express.static(path.resolve(__dirname, '..', 'dist')));
+app.get('/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'bundle.js')));
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'index.html')));
 
-app.post('/check-address', async (req, res) => {
+app.post('/api/check-address', async (req, res) => {
   const { address, message, signature } = req.body;
   const signerAddr = await ethers.utils.verifyMessage(message, signature);
 
