@@ -8,11 +8,11 @@ module.exports = (_env, argv) => {
 
   const config = {
     devtool: isDevelopment && "cheap-module-source-map",
-    entry: './src/index.js',
+    entry: './frontend/src/index.js',
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'frontend', 'dist'),
       filename: 'bundle.js',
-      publicPath: "/"
+      publicPath: './',
     },
     module: {
       rules: [
@@ -36,11 +36,11 @@ module.exports = (_env, argv) => {
       ],
     },
     resolve: {
-      extensions: [".js", ".jsx"]
+      extensions: ['.js', '.jsx']
     },
     plugins: [
       new HtmlWebpackPlugin({
-        template: path.join(__dirname, "public", "index.html"),
+        template: path.join(__dirname, 'frontend', 'public', 'index.html'),
       }),
     ],
   };

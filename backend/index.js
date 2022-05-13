@@ -1,16 +1,16 @@
 const express = require('express');
 const path = require('path');
 const { ethers } = require('ethers');
-const whiteList = require('../config/whiteList.json');
+const whiteList = require('../frontend/config/whiteList.json');
 
 const port = process.env.PORT;
 
 const app = express();
 app.use(express.json());
 
-app.use('/', express.static(path.resolve(__dirname, '..', 'dist')));
-app.get('*/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'bundle.js')));
-app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'dist', 'index.html')));
+app.use('/', express.static(path.resolve(__dirname, '..', 'frontend', 'dist')));
+app.get('*/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'frontend', 'dist', 'bundle.js')));
+app.get('*', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'frontend', 'dist', 'index.html')));
 
 app.post('/api/check-address', async (req, res) => {
   const { address, message, signature } = req.body;

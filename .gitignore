@@ -1,5 +1,5 @@
-dist
-config
+frontend/dist
+frontend/config
 node_modules
 yarn.lock
 **/.DS_Store

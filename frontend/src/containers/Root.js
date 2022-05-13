@@ -62,7 +62,7 @@ const Root = () => {
   };
   
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={(process.env.NODE_ENV == 'production') ? '/address-prover/' : ''}>
       <Rootwrapper>
         <Router
           address={addr}
