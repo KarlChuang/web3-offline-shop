@@ -43,6 +43,13 @@ module.exports = (_env, argv) => {
         template: path.join(__dirname, 'frontend', 'public', 'index.html'),
       }),
     ],
+    devServer: {
+      static: {
+        directory: path.join(__dirname, 'frontend', 'dist'),
+      },
+      compress: true,
+      port: 8080,
+    },
   };
   return config;
 };
