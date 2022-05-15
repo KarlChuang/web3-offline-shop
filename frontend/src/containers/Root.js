@@ -5,6 +5,11 @@ import axios from 'axios';
 import { BrowserRouter } from 'react-router-dom';
 
 import Router from '../components/Router';
+import contractAddr from '../../../contract/config/contract-address.json';
+import contractJson from '../../../contract/config/DrinkNFT.json';
+
+const { DrinkNFT: drinkNftAddr  } = contractAddr;
+const { abi: contractABI } = contractJson;
 
 const signMessage = async (msg) => {
   if (!window.ethereum)
@@ -29,13 +34,38 @@ const getAddress = async () => {
 
 const Root = () => {
   const [addr, setAddr] = useState('Address');
-  const [nftList, setNftList] = useState([
-    {id: '1', name: 'name 1'},
-    {id: '2', name: 'name 2'},
-    {id: '3', name: 'name 3'},
-  ]);
+  const [nftList, setNftList] = useState([]);
   const [verify, setVerify] = useState('Invalid');
   const [verifyMsg, setMsg] = useState('Click to verify');
+
+  const getNFTs = async (addr) => {
+    if (addr != 'Address') {
+      if (!window.ethereum)
+        throw new Error('No wallet found!');
+      const provider = new ethers.providers.Web3Provider(window.ethereum);
+      const contract = new ethers.Contract(drinkNftAddr, contractABI, provider);
+
+      const nftName = await contract.name();
+      // const nftSymbol = await contract.symbol();
+      const nftNum = await contract.balanceOf(addr);
+
+      let list = Array.from(Array(nftNum.toNumber()).keys());
+      list = list.map(async (i) => {
+        const tokenId = await contract.tokenOfOwnerByIndex(addr, i);
+        return {
+          id: `${nftName}${tokenId.toString()}`,
+          name: `${nftName} ${tokenId.toString()}`,
+        };
+      });
+      list = await Promise.all(list);
+      setNftList(list);
+    }
+  }
+
+  useEffect(() => {
+    getNFTs(addr);
+  }, [addr]);
+
   useEffect(() => {
     setInterval(async () => {
       const newAddr = await getAddress();

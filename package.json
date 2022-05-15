@@ -12,8 +12,9 @@
     "build:production": "webpack --mode production",
     "serve": "nodemon ./backend/index.js",
     "deploy": "node ./frontend/utils/deploy.js",
-    "contract_deploy": "npx hardhat run contract/scripts/deploy.js --network localhost",
-    "test": "hardhat test"
+    "test": "hardhat test",
+    "contract:deploy": "npx hardhat run contract/scripts/deploy.js --network localhost",
+    "contract:mintNFT": "npx hardhat run contract/scripts/mintNFT.js --network localhost"
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.6.0",
