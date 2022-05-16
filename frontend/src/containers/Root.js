@@ -29,16 +29,17 @@ const getNFTs = async (addr) => {
   // const nftSymbol = await contract.symbol();
   const nftNum = await contract.balanceOf(addr);
 
-  let rawNFTs = [];
-  for (let i = 0; i < nftNum; i++) {
-    const tokenId = await contract.tokenOfOwnerByIndex(addr, i);
-    rawNFTs.push({
+  let tasks = []
+  for(let i = 0; i < nftNum; i++) {
+    tasks.push( contract.tokenOfOwnerByIndex(addr, i) )
+  }
+  const nftIds = await Promise.all(tasks)
+  return nftIds.map((tokenId) => {
+    return {
       id: `${drinkNftAddr}/${tokenId.toString()}`,
       name: `${nftName} ${tokenId.toString()}`,
-    });
-  }
-
-  return rawNFTs;
+    };
+  })
 };
 
 const Root = () => {
