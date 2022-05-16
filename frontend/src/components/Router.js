@@ -2,15 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { Routes, Route } from 'react-router-dom';
 
-import MessageVer from './MessageVer';
+import NftPage from '../containers/NftPage';
 import AccountNFTs from './AccountNFTs';
 
 const Router = ({
   address,
   nftList,
-  verify,
-  verifyMsg,
-  handleOnVerify,
 }) => (
     <Rootwrapper>
       <AddrDisplay>
@@ -20,28 +17,14 @@ const Router = ({
         <Routes>
           <Route
             exact
-            key="/"
             path="/"
             element={<AccountNFTs nftList={nftList} />}
           />
-          {
-            nftList.map(({ id, name }) => (
-              <Route
-                exact
-                key={`/nft/${id}`}
-                path={`/nft/${id}`}
-                element={
-                  <MessageVer
-                    id={id}
-                    name={name}
-                    verify={verify}
-                    verifyMsg={verifyMsg}
-                    handleOnVer={handleOnVerify}
-                  />
-                }
-              />
-            ))
-          }
+          <Route
+            exact
+            path="/nft/:contractAddr/:nftId"
+            element={<NftPage />}
+          />
         </Routes>
       </Display>
     </Rootwrapper>

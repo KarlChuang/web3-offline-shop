@@ -1,25 +1,32 @@
 import React from 'react';
-import styled, { keyframes } from 'styled-components';
+import styled from 'styled-components';
 import { Link } from "react-router-dom";
+
+import Waiting from './Waiting';
 
 const AccountNFTs = ({
   nftList,
-}) => (
-  <NftList>
-    {
-      nftList.map(({ id, name }) => (
-        <NftBlock key={id} to={`/nft/${id}`} >
-          {name}
-        </NftBlock>
-      ))
-    }
-  </NftList>
-);
+}) => {
+  if (nftList == undefined)
+    return (<Waiting />);
+  return (
+    <NftList>
+      {
+        nftList.map(({ id, name }) => (
+          <NftBlock key={id} to={`/nft/${id}`} state={{ nftName: name }}>
+            {name}
+          </NftBlock>
+        ))
+      }
+    </NftList>
+  );
+};
 
 export default AccountNFTs;
 
 const NftList = styled.div`
   width: 60%;
+  padding-bottom: 20px;
 `;
 
 const NftBlock = styled(Link)`

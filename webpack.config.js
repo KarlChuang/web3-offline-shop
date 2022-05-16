@@ -1,13 +1,15 @@
 const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (_env, argv) => {
   const isProduction = argv.mode === "production";
   const isDevelopment = !isProduction;
 
   const config = {
-    devtool: isDevelopment && "cheap-module-source-map",
+    mode: argv.mode,
+    devtool: isDevelopment && "inline-source-map",
     entry: './frontend/src/index.js',
     output: {
       path: path.resolve(__dirname, 'frontend', 'dist'),
@@ -41,8 +43,13 @@ module.exports = (_env, argv) => {
     plugins: [
       new HtmlWebpackPlugin({
         template: path.join(__dirname, 'frontend', 'public', 'index.html'),
+        inject: false,
       }),
     ],
+    optimization: {
+      minimize: isProduction,
+      minimizer: [new TerserPlugin()],
+    },
     devServer: {
       static: {
         directory: path.join(__dirname, 'frontend', 'dist'),
