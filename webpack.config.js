@@ -1,16 +1,16 @@
-const webpack = require('webpack');
+// const webpack = require('webpack');
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (_env, argv) => {
-  const isProduction = argv.mode === "production";
+  const isProduction = argv.mode === 'production';
   const isDevelopment = !isProduction;
 
   const config = {
     mode: argv.mode,
-    devtool: isDevelopment && "inline-source-map",
-    entry: './frontend/src/index.js',
+    devtool: isDevelopment && 'inline-source-map',
+    entry: './frontend/src/index.jsx',
     output: {
       path: path.resolve(__dirname, 'frontend', 'dist'),
       filename: 'bundle.js',
@@ -22,14 +22,14 @@ module.exports = (_env, argv) => {
           test: /\.jsx?$/,
           exclude: /node_modules/,
           use: {
-            loader: "babel-loader",
+            loader: 'babel-loader',
             options: {
               presets: ['@babel/preset-env', '@babel/preset-react'],
               cacheDirectory: true,
               cacheCompression: false,
-              envName: isProduction ? "production" : "development"
-            }
-          }
+              envName: isProduction ? 'production' : 'development',
+            },
+          },
         },
         {
           test: /\.css$/,
@@ -38,7 +38,7 @@ module.exports = (_env, argv) => {
       ],
     },
     resolve: {
-      extensions: ['.js', '.jsx']
+      extensions: ['.js', '.jsx'],
     },
     plugins: [
       new HtmlWebpackPlugin({
