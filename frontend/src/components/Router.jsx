@@ -5,10 +5,10 @@ import { Routes, Route } from 'react-router-dom';
 import NftPage from '../containers/NftPage';
 import AccountNFTs from './AccountNFTs';
 
-const Router = ({
-  address,
-  nftList,
-}) => (
+function Router({
+  address, nftList,
+}) {
+  return (
     <Rootwrapper>
       <AddrDisplay>
         <AddrShow>{address}</AddrShow>
@@ -28,7 +28,8 @@ const Router = ({
         </Routes>
       </Display>
     </Rootwrapper>
-);
+  );
+}
 
 export default Router;
 

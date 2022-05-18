@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useParams, useLocation } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
 import MessageVer from '../components/MessageVer';
@@ -9,17 +9,16 @@ import contractJson from '../../../contract/config/DrinkNFT.json';
 const { abi: contractABI } = contractJson;
 
 const signMessage = async (msg) => {
-  if (!window.ethereum)
-    throw new Error('No wallet found!');
+  if (!window.ethereum) throw new Error('No wallet found!');
   await window.ethereum.request({ method: 'eth_requestAccounts' });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const signature = await signer.signMessage(msg);
   const address = await signer.getAddress();
   return { address, signature };
-}
+};
 
-const NftPage = () => {
+function NftPage() {
   const { state } = useLocation();
   const [verify, setVerify] = useState('');
   const [verifyMsg, setMsg] = useState('Click to verify');
@@ -33,12 +32,11 @@ const NftPage = () => {
     } else {
       const fetchNftName = async () => {
         try {
-          if (!window.ethereum)
-          throw new Error('No wallet found!');
+          if (!window.ethereum) throw new Error('No wallet found!');
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const contract = new ethers.Contract(contractAddr, contractABI, provider);
-          const nftName = await contract.name();
-          setNftName(`${nftName} ${nftId}`);
+          const name = await contract.name();
+          setNftName(`${name} ${nftId}`);
           setVerify('Invalid');
         } catch (err) {
           console.log(err);
@@ -76,6 +74,6 @@ const NftPage = () => {
       handleOnVer={handleOnVerify}
     />
   );
-};
+}
 
 export default NftPage;
