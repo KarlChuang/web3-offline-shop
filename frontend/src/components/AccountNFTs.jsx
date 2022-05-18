@@ -1,14 +1,13 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 import Waiting from './Waiting';
 
-const AccountNFTs = ({
+function AccountNFTs({
   nftList,
-}) => {
-  if (nftList == undefined)
-    return (<Waiting />);
+}) {
+  if (nftList === undefined) return (<Waiting />);
   return (
     <NftList>
       {
@@ -20,7 +19,7 @@ const AccountNFTs = ({
       }
     </NftList>
   );
-};
+}
 
 export default AccountNFTs;
 
@@ -42,10 +41,10 @@ const NftBlock = styled(Link)`
   padding-bottom: 20px;
   border-style: solid;
   border-color: white;
-	border-radius: 6px;
-	border-width: 2px;
+  border-radius: 6px;
+  border-width: 2px;
   word-break: break-word;
-	transition: 0.2s ease;
+  transition: 0.2s ease;
   cursor: pointer;
   position: relative;
   text-decoration: none;

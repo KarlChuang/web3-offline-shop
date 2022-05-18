@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from "react";
-import styled from "styled-components";
-import { ethers } from "ethers";
-import { BrowserRouter } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
+import { ethers } from 'ethers';
+import { BrowserRouter } from 'react-router-dom';
 
-import Router from "../components/Router";
-import contractAddr from "../../../contract/config/contract-address.json";
-import contractJson from "../../../contract/config/DrinkNFT.json";
+import Router from '../components/Router';
+import contractAddr from '../../../contract/config/contract-address.json';
+import contractJson from '../../../contract/config/DrinkNFT.json';
 
 const { DrinkNFT: drinkNftAddr } = contractAddr;
 const { abi: contractABI } = contractJson;
 
 const getAddress = async () => {
-  if (!window.ethereum) throw new Error("No wallet found!");
-  await window.ethereum.request({ method: "eth_requestAccounts" });
+  if (!window.ethereum) throw new Error('No wallet found!');
+  await window.ethereum.request({ method: 'eth_requestAccounts' });
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const signer = provider.getSigner();
   const address = await signer.getAddress();
@@ -21,7 +21,7 @@ const getAddress = async () => {
 
 const getNFTs = async (addr) => {
   if (!ethers.utils.isAddress(addr)) return [];
-  if (!window.ethereum) throw new Error("No wallet found!");
+  if (!window.ethereum) throw new Error('No wallet found!');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
   const contract = new ethers.Contract(drinkNftAddr, contractABI, provider);
 
@@ -29,27 +29,25 @@ const getNFTs = async (addr) => {
   // const nftSymbol = await contract.symbol();
   const nftNum = await contract.balanceOf(addr);
 
-  let tasks = []
-  for(let i = 0; i < nftNum; i++) {
-    tasks.push( contract.tokenOfOwnerByIndex(addr, i) )
+  const tasks = [];
+  for (let i = 0; i < nftNum; i += 1) {
+    tasks.push(contract.tokenOfOwnerByIndex(addr, i));
   }
-  const nftIds = await Promise.all(tasks)
-  return nftIds.map((tokenId) => {
-    return {
-      id: `${drinkNftAddr}/${tokenId.toString()}`,
-      name: `${nftName} ${tokenId.toString()}`,
-    };
-  })
+  const nftIds = await Promise.all(tasks);
+  return nftIds.map((tokenId) => ({
+    id: `${drinkNftAddr}/${tokenId.toString()}`,
+    name: `${nftName} ${tokenId.toString()}`,
+  }));
 };
 
-const Root = () => {
-  const [addr, setAddr] = useState("Address");
+function Root() {
+  const [addr, setAddr] = useState('Address');
   const [nftList, setNftList] = useState(undefined);
 
   useEffect(() => {
     const getAddr = async () => {
       const newAddr = await getAddress();
-      if (newAddr != addr) {
+      if (newAddr !== addr) {
         // console.log(addr, '->', newAddr);
         setAddr(newAddr);
         try {
@@ -66,14 +64,14 @@ const Root = () => {
 
   return (
     <BrowserRouter
-      basename={process.env.NODE_ENV == "production" ? "/address-prover/" : ""}
+      basename={process.env.NODE_ENV === 'production' ? '/address-prover/' : ''}
     >
       <Rootwrapper>
         <Router address={addr} nftList={nftList} />
       </Rootwrapper>
     </BrowserRouter>
   );
-};
+}
 
 export default Root;
 

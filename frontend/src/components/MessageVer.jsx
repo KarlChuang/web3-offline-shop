@@ -3,25 +3,27 @@ import styled from 'styled-components';
 
 import Waiting from './Waiting';
 
-const MessageVer = ({
+function MessageVer({
   name,
   verify,
   verifyMsg,
   handleOnVer,
-}) => (
-  <Rootwrapper valid={verify == 'Valid'}>
-    {
-      (verify == '') ? (
+}) {
+  return (
+    <Rootwrapper valid={verify === 'Valid'}>
+      {
+      (verify === '') ? (
         <Waiting />
       ) : (
         <Display>
-          <Btn valid={verify == 'Valid'} onClick={handleOnVer}>{name}</Btn>
+          <Btn valid={verify === 'Valid'} onClick={handleOnVer}>{name}</Btn>
           <Message>{verifyMsg}</Message>
         </Display>
       )
     }
-  </Rootwrapper>
-);
+    </Rootwrapper>
+  );
+}
 
 export default MessageVer;
 
@@ -57,14 +59,14 @@ const Btn = styled.button`
   width: 100%;
   padding: 10px 20px;
   border-color: white;
-	border-radius: 6px;
-	border-width: 2px;
-	border-style: solid;
-	font-size: 30px;
+  border-radius: 6px;
+  border-width: 2px;
+  border-style: solid;
+  font-size: 30px;
   font-weight: 900;
-	font-family: 'Ubuntu', sans-serif;
-	cursor: pointer;
-	transition: 0.25s ease;
+  font-family: 'Ubuntu', sans-serif;
+  cursor: pointer;
+  transition: 0.25s ease;
   position: relative;
   user-select: none;
   &:active {

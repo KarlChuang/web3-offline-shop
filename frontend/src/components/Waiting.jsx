@@ -1,16 +1,17 @@
 import React from 'react';
 import styled, { keyframes } from 'styled-components';
 
-const Waiting = () => (
-  <Loading>
-    <LoadingPoint delay={0} />
-    <LoadingPoint delay={0.4} />
-    <LoadingPoint delay={0.8} />
-  </Loading>
-);
+function Waiting() {
+  return (
+    <Loading>
+      <LoadingPoint delay={0} />
+      <LoadingPoint delay={0.4} />
+      <LoadingPoint delay={0.8} />
+    </Loading>
+  );
+}
 
 export default Waiting;
-
 
 const LoadingAnimation = keyframes`
   to {
@@ -51,4 +52,3 @@ const Loading = styled.div`
   align-items: center;
   transition: none;
 `;
-
