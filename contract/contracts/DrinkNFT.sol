@@ -2,45 +2,116 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-// import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 contract DrinkNFT is ERC721Enumerable, Ownable {
     // Declare Variables
     uint256 public mintPrice = 0.03 ether;
+    uint256 public mintLimit;
 
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
-    constructor() ERC721("Drink-NFT", "Drink-NFT") {}
+    constructor(
+        string memory _name,
+        string memory _symbol,
+        uint256 _price,
+        uint256 _limit
+    ) ERC721(_name, _symbol) {
+        mintPrice = _price;
+        mintLimit = _limit;
+    }
 
-    function mintNFT(uint256 tokenQuantity)
-        public payable
-    {
-        // address recipient = msg.sender;
-        require(mintPrice * tokenQuantity <= msg.value, "Not enough ether." );
+    // Events
+    event Mint(address indexed _from, uint256 indexed _id);
+    event Burn(address indexed _from, uint256 indexed _id);
 
+    function mintNFT(uint256 tokenQuantity) public payable {
+        require(mintPrice * tokenQuantity <= msg.value, "Not enough ether.");
+        require(_tokenIds.current() < mintLimit, "No NFT can be mint.");
 
-        for(uint256 i = 0; i < tokenQuantity; i++) {
+        for (uint256 i = 0; i < tokenQuantity; i++) {
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
             _safeMint(msg.sender, newItemId);
             // _setTokenURI(newItemId, tokenURI);
         }
+        emit Mint(msg.sender, _tokenIds.current());
     }
 
-    function destroyNFT(uint256 tokenId) public
-    {
+    function destroyNFT(uint256 tokenId, bytes memory signature, uint8 message_length) public {
+        string memory message = Strings.toString(tokenId);
+        address signer = verifySignature(message, signature, message_length);
         address owner = ownerOf(tokenId);
-        require(msg.sender == owner, "Sender and NFT owner not the same.");
+
+        require(signer == owner, "Signer and NFT owner not match.");
+
         _burn(tokenId);
+        emit Burn(msg.sender, tokenId);
+    }
+
+    function verifySignature(
+        string memory message,
+        bytes memory signature,
+        uint8 message_length
+    ) public pure returns (address) {
+        bytes memory prefix = abi.encodePacked(
+            "\x19Ethereum Signed Message:\n",
+            Strings.toString(message_length)
+        );
+
+        bytes32 signedMessage = keccak256(abi.encodePacked(prefix, message));
+        address signer = recoverSigner(signedMessage, signature);
+        return signer;
+    }
+
+    function recoverSigner(bytes32 signedMessage, bytes memory signature)
+        public
+        pure
+        returns (address)
+    {
+        (bytes32 r, bytes32 s, uint8 v) = splitSignature(signature);
+
+        return ecrecover(signedMessage, v, r, s);
+    }
+
+    function splitSignature(bytes memory sig)
+        public
+        pure
+        returns (
+            bytes32 r,
+            bytes32 s,
+            uint8 v
+        )
+    {
+        require(sig.length == 65, "invalid signature length");
+
+        assembly {
+            /*
+            First 32 bytes stores the length of the signature
+
+            add(sig, 32) = pointer of sig + 32
+            effectively, skips first 32 bytes of signature
+
+            mload(p) loads next 32 bytes starting at the memory address p into memory
+            */
+
+            // first 32 bytes, after the length prefix
+            r := mload(add(sig, 32))
+            // second 32 bytes
+            s := mload(add(sig, 64))
+            // final byte (first byte of the next 32 bytes)
+            v := byte(0, mload(add(sig, 96)))
+        }
+
+        // implicitly return (r, s, v)
     }
 
     function setMintPrice(uint256 _mintPrice) public onlyOwner {
         mintPrice = _mintPrice;
     }
-
 }
