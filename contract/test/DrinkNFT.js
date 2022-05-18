@@ -1,3 +1,5 @@
+/* eslint-disable */ 
+
 // We import Chai to use its asserting functions here.
 const { expect } = require("chai");
 
@@ -27,7 +29,7 @@ describe("DrinkNFT contract", function () {
   let addr2;
   let addrs;
 
-  async function mintToken(mint_num) {
+  async function mintNFT(mint_num) {
     await hardhatDrinkNFT.mintNFT(mint_num);
 
     const owner_num = await hardhatDrinkNFT.balanceOf(owner.address);
@@ -43,8 +45,16 @@ describe("DrinkNFT contract", function () {
     // To deploy our contract, we just have to call DrinkNFT.deploy() and await
     // for it to be deployed(), which happens once its transaction has been
     // mined.
-    hardhatDrinkNFT = await DrinkNFT.deploy();
+    const name_ = "NFT"
+    const symbol_ = "Trash"
+    const price = 3;
+    const limit = 50;
+    hardhatDrinkNFT = await DrinkNFT.deploy(name_, symbol_, price, limit);
     await hardhatDrinkNFT.setMintPrice(0);
+
+    const name = await hardhatDrinkNFT.name()
+    console.log("Name: ", name)
+
   });
 
   // You can nest describe calls to create subsections.
@@ -66,22 +76,27 @@ describe("DrinkNFT contract", function () {
   describe("Mint NFT", function () {
     it("Should mint single NFT", async function () {
       // Mint 1 NFT
-      await mintToken(1);
+      await mintNFT(1);
     });
 
     it("Should mint multiple NFT", async function () {
       // Mint 5 NFT
-      await mintToken(5);
+      await mintNFT(5);
     })
   });
   describe("Destroy NFT", function () {
     it("Should destroy NFT", async function () {
       // Mint 1 NFT
-      await mintToken(1);
-      
+      await mintNFT(1);
       // Burn token
       const tokenId = 1;
-      await hardhatDrinkNFT.destroyNFT(tokenId);
+
+      const signer = owner;
+      // Sign the binary data
+      const msg = tokenId.toString()
+      const signature = await signer.signMessage(msg);
+      
+      await hardhatDrinkNFT.destroyNFT(tokenId, signature, msg.length);
       const owner_num_after_destroy = await hardhatDrinkNFT.balanceOf(owner.address);
       expect(owner_num_after_destroy).to.equal(0);
     })
@@ -90,7 +105,7 @@ describe("DrinkNFT contract", function () {
   describe("Fetch user's NFTs", function () {
     it("Should check user's NFTs", async function () {
       // Mint 2 NFT
-      await mintToken(3);
+      await mintNFT(3);
 
       // Get user's token
       const nft_num = await hardhatDrinkNFT.balanceOf(owner.address);
@@ -99,6 +114,21 @@ describe("DrinkNFT contract", function () {
         // Check tokenid belongs to user
         expect(await hardhatDrinkNFT.ownerOf(tokenId)).to.equal(owner.address);
       }
+    })
+  })
+
+  describe("Signature Verification", function () {
+    it("Should verify the signature", async function () {
+      const msg = "abcdef";
+      const signer = owner;
+      // Sign the binary data
+      const signature = await signer.signMessage(msg);
+
+      const sig_address = await hardhatDrinkNFT.verifySignature(msg, signature, msg.length)
+      console.log("address", sig_address)
+
+      const address = await signer.getAddress();
+      expect(address).to.equal(sig_address)
 
     })
   })

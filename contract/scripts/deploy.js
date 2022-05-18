@@ -44,7 +44,18 @@ async function main() {
   console.log('Account balance:', (await deployer.getBalance()).toString());
 
   const DrinkNFT = await ethers.getContractFactory('DrinkNFT');
-  const drinkNFT = await DrinkNFT.deploy();
+  const config = {
+    name: '???',
+    symbol: '???',
+    price: 3,
+    limit: 50,
+  };
+  const drinkNFT = await DrinkNFT.deploy(
+    config.name,
+    config.symbol,
+    config.price,
+    config.limit,
+  );
   await drinkNFT.deployed();
 
   console.log('drinkNFT address:', drinkNFT.address);
