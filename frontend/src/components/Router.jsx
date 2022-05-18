@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { Routes, Route } from 'react-router-dom';
 
 import NftPage from '../containers/NftPage';
+import DeployPage from '../containers/DeployPage';
 import AccountNFTs from './AccountNFTs';
 
 function Router({
@@ -24,6 +25,11 @@ function Router({
             exact
             path="/nft/:contractAddr/:nftId"
             element={<NftPage />}
+          />
+          <Route
+            exact
+            path="/deploy"
+            element={<DeployPage />}
           />
         </Routes>
       </Display>
