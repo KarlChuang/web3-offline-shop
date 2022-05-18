@@ -18,9 +18,9 @@ app.post('/api/check-address', async (req, res) => {
   const contract = new ethers.Contract(contractAddr, contractABI, provider);
   const tokenOwner = await contract.ownerOf(nftId);
 
-  if (address != signerAddr) {
+  if (address !== signerAddr) {
     res.json({ valid: false, message: 'Signature and address mismatch' });
-  } else if (address != tokenOwner) {
+  } else if (address !== tokenOwner) {
     res.json({ valid: false, message: 'Address not own the NFT' });
   } else if (new Date().getTime() - new Date(time).getTime() >= 30000) {
     res.json({ valid: false, message: 'Timestamp expired' });
