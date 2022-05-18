@@ -29,17 +29,15 @@ const getNFTs = async (addr) => {
   // const nftSymbol = await contract.symbol();
   const nftNum = await contract.balanceOf(addr);
 
-  let tasks = []
-  for(let i = 0; i < nftNum; i++) {
-    tasks.push( contract.tokenOfOwnerByIndex(addr, i) )
+  let tasks = [];
+  for (let i = 0; i < nftNum; i++) {
+    tasks.push(contract.tokenOfOwnerByIndex(addr, i));
   }
-  const nftIds = await Promise.all(tasks)
-  return nftIds.map((tokenId) => {
-    return {
-      id: `${drinkNftAddr}/${tokenId.toString()}`,
-      name: `${nftName} ${tokenId.toString()}`,
-    };
-  })
+  const nftIds = await Promise.all(tasks);
+  return nftIds.map((tokenId) => ({
+    id: `${drinkNftAddr}/${tokenId.toString()}`,
+    name: `${nftName} ${tokenId.toString()}`
+  }));
 };
 
 const Root = () => {
@@ -53,7 +51,6 @@ const Root = () => {
         // console.log(addr, '->', newAddr);
         setAddr(newAddr);
         try {
-          setNftList(undefined);
           setNftList(await getNFTs(newAddr));
         } catch (err) {
           console.log(err);
@@ -62,7 +59,7 @@ const Root = () => {
       }
     };
     getAddr();
-  }, [addr]);
+  }, []);
 
   return (
     <BrowserRouter
