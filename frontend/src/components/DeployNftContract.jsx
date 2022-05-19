@@ -1,29 +1,36 @@
 import React from 'react';
 import styled from 'styled-components';
 
-// import Waiting from './Waiting';
+import Waiting from './Waiting';
 
 function DeployNftContract({
+  pageState,
   nftName,
-  handleNameChange,
+  changeNameChange,
   nftSymbol,
-  handleSymbolChange,
+  changeSymbolChange,
   nftMintPrice,
-  handleMintPriceChange,
+  changeMintPriceChange,
   nftLimit,
-  handleLimitChange,
+  changeLimitChange,
   handleDeploy,
 }) {
+  if (pageState === 'loading') {
+    return (<Waiting />);
+  }
   return (
     <Rootwrapper>
       <Title>Name</Title>
-      <Input value={nftName} onChange={(e) => handleNameChange(e.target.value)} />
+      <Input value={nftName} onChange={(e) => changeNameChange(e.target.value)} />
       <Title>Symbol</Title>
-      <Input value={nftSymbol} onChange={(e) => handleSymbolChange(e.target.value)} />
+      <Input value={nftSymbol} onChange={(e) => changeSymbolChange(e.target.value)} />
       <Title>Mint Price</Title>
-      <Input type="number" value={nftMintPrice} onChange={(e) => handleMintPriceChange(e.target.value)} />
+      <Row>
+        <InputEther type="number" value={nftMintPrice} onChange={(e) => changeMintPriceChange(e.target.value)} />
+        <ValueUnit>ether</ValueUnit>
+      </Row>
       <Title>Limit</Title>
-      <Input type="number" value={nftLimit} onChange={(e) => handleLimitChange(e.target.value)} />
+      <Input type="number" value={nftLimit} onChange={(e) => changeLimitChange(e.target.value)} />
       <DeployBtn onClick={handleDeploy}>Deploy Contract</DeployBtn>
     </Rootwrapper>
   );
@@ -58,6 +65,16 @@ const Title = styled.div`
   margin-top: 10px;
 `;
 
+const Row = styled.div`
+  width: 80%;
+  margin-bottom: 10px;
+  height: 40px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+`;
+
 const Input = styled.input`
   width: 80%;
   margin-bottom: 10px;
@@ -67,6 +84,19 @@ const Input = styled.input`
   font-size: 25px;
   font-weight: 900;
   color: white;
+  text-align: right;
+`;
+
+const InputEther = styled(Input)`
+  flex-grow: 1;
+  margin: 0;
+`;
+
+const ValueUnit = styled.div`
+  font-size: 17px;
+  font-weight: 900;
+  color: white;
+  padding-left: 5px;
 `;
 
 const DeployBtn = styled.button`

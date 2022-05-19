@@ -4,31 +4,45 @@ import { Link } from 'react-router-dom';
 
 import Waiting from './Waiting';
 
-function AccountNFTs({
-  nftList,
+function Shop({
+  contractList,
 }) {
-  if (nftList === undefined) return (<Waiting />);
+  if (contractList === undefined) {
+    return (<Waiting />);
+  }
   return (
-    <NftList>
-      {
-        nftList.map(({ id, name }) => (
-          <NftBlock key={id} to={`/nft/${id}`} state={{ nftName: name }}>
-            {name}
-          </NftBlock>
-        ))
-      }
-    </NftList>
+    <Rootwrapper>
+      <ContractList>
+        {
+          contractList.map(({ contractAddr, name }) => (
+            <ContractBlock key={contractAddr} to={`/mint/${contractAddr}`}>{name}</ContractBlock>
+          ))
+        }
+      </ContractList>
+    </Rootwrapper>
   );
 }
 
-export default AccountNFTs;
+export default Shop;
 
-const NftList = styled.div`
-  width: 60%;
+const Rootwrapper = styled.div`
+  width: 100%;
+  flex-grow: 1;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  position: relative;
+  overflow: scroll;
+`;
+
+const ContractList = styled.div`
+  width: 80%;
   padding-bottom: 20px;
 `;
 
-const NftBlock = styled(Link)`
+const ContractBlock = styled(Link)`
   color: white;
   width: 100%;
   background: transparent;

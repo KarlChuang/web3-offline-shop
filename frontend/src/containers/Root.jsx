@@ -4,10 +4,10 @@ import { ethers } from 'ethers';
 import { BrowserRouter } from 'react-router-dom';
 
 import Router from '../components/Router';
-import contractAddr from '../../../contract/config/contract-address.json';
+// import contractAddr from '../../../contract/config/contract-address.json';
 import contractJson from '../../../contract/config/DrinkNFT.json';
 
-const { DrinkNFT: drinkNftAddr } = contractAddr;
+// const { DrinkNFT: drinkNftAddr } = contractAddr;
 const { abi: contractABI } = contractJson;
 
 const getAddress = async () => {
@@ -19,39 +19,51 @@ const getAddress = async () => {
   return address;
 };
 
-const getNFTs = async (addr) => {
+const getNFTs = async (addr, contractAddrList) => {
   if (!ethers.utils.isAddress(addr)) return [];
   if (!window.ethereum) throw new Error('No wallet found!');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
-  const contract = new ethers.Contract(drinkNftAddr, contractABI, provider);
 
-  const nftName = await contract.name();
-  // const nftSymbol = await contract.symbol();
-  const nftNum = await contract.balanceOf(addr);
+  let allList = contractAddrList.map(async (contractAddr) => {
+    const contract = new ethers.Contract(contractAddr, contractABI, provider);
+    const nftName = await contract.name();
+    const nftNum = await contract.balanceOf(addr);
+    const tasks = [];
+    for (let i = 0; i < nftNum; i += 1) {
+      tasks.push(contract.tokenOfOwnerByIndex(addr, i));
+    }
+    const nftIds = await Promise.all(tasks);
+    return nftIds.map((tokenId) => ({
+      id: `${contractAddr}/${tokenId.toString()}`,
+      name: `${nftName} #${tokenId.toString()}`,
+    }));
+  });
 
-  const tasks = [];
-  for (let i = 0; i < nftNum; i += 1) {
-    tasks.push(contract.tokenOfOwnerByIndex(addr, i));
-  }
-  const nftIds = await Promise.all(tasks);
-  return nftIds.map((tokenId) => ({
-    id: `${drinkNftAddr}/${tokenId.toString()}`,
-    name: `${nftName} ${tokenId.toString()}`,
-  }));
+  allList = await Promise.all(allList);
+  return allList.flat(1);
 };
 
 function Root() {
   const [addr, setAddr] = useState('Address');
+  // const [contractList, setContractList] = useState([]);
   const [nftList, setNftList] = useState(undefined);
 
   useEffect(() => {
     const getAddr = async () => {
       const newAddr = await getAddress();
+      const contractAddrList = [
+        '0x5fbdb2315678afecb367f032d93f642f64180aa3',
+        '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
+        '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
+        '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
+      ];
+      // setContractList(contractAddrList);
+
       if (newAddr !== addr) {
         // console.log(addr, '->', newAddr);
         setAddr(newAddr);
         try {
-          setNftList(await getNFTs(newAddr));
+          setNftList(await getNFTs(newAddr, contractAddrList));
         } catch (err) {
           console.log(err);
           setNftList([]);

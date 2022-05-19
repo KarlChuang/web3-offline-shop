@@ -36,7 +36,7 @@ function NftPage() {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const contract = new ethers.Contract(contractAddr, contractABI, provider);
           const name = await contract.name();
-          setNftName(`${name} ${nftId}`);
+          setNftName(`${name} #${nftId}`);
           setVerify('Invalid');
         } catch (err) {
           console.log(err);
