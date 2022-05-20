@@ -3,6 +3,7 @@ require('dotenv').config();
 const { ethers } = require('ethers');
 const db = require('../models');
 const { abi: contractABI } = require('../../contract/config/DrinkNFT.json');
+const { provider, signer } = require('../config');
 
 class SignatureController {
   static async verify(req, res) {
@@ -11,9 +12,6 @@ class SignatureController {
       const { time, contractAddr, nftId } = JSON.parse(message);
       const signerAddr = await ethers.utils.verifyMessage(message, signature);
 
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NETWORK_URL,
-      );
       const contract = new ethers.Contract(contractAddr, contractABI, provider);
       const tokenOwner = await contract.ownerOf(nftId);
 
@@ -24,13 +22,16 @@ class SignatureController {
       } else if (new Date().getTime() - new Date(time).getTime() >= 30000) {
         res.json({ valid: false, message: 'Timestamp expired' });
       } else {
-        // TODO: Add signature to database
         await db.Signature.create({
           signer: address,
           contractAddress: contractAddr,
           tokenId: nftId,
           signature,
         });
+        // TODO: Burn transactions
+        const contractSigner = contract.connect(signer);
+        await contractSigner.destroyNFT(nftId, signature, nftId.length);
+
         res.json({ valid: true, message: '(͠≖ ͜ʖ͠≖)👌' });
       }
     } catch (err) {

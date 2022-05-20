@@ -2,10 +2,8 @@ require('dotenv').config();
 
 const { ethers } = require('ethers');
 const db = require('../models');
+const { provider } = require('../config');
 
-const network = process.env.NETWORK_URL;
-const provider = ethers.getDefaultProvider(network);
-// const provider = new ethers.providers.JsonRpcProvider(network);
 const topic = ethers.utils.id('Burn(address,uint256)');
 const filter = {
   topics: [topic],

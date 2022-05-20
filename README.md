@@ -48,3 +48,8 @@ We can test the smart contract by running
 ```sh
 npx hardhat test
 ```
+
+## Run database
+```sh
+docker-compose up --build
+```

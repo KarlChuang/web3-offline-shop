@@ -68,7 +68,7 @@ const Signature = sequelize.define('Signature', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  signature: {
+  digest: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
