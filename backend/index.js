@@ -1,9 +1,8 @@
-import router from './routes';
-import contractEventHandler from './utils/eventHandler';
-import runScheduler from './utils/scheduler';
-
 const express = require('express');
 const path = require('path');
+const router = require('./routes');
+const contractEventHandler = require('./utils/eventHandler');
+const runScheduler = require('./utils/scheduler');
 
 const port = process.env.PORT;
 

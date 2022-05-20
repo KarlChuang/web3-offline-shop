@@ -1,8 +1,7 @@
-import SignatureController from '../../controllers/SignatureController';
-
 const express = require('express');
+const SignatureController = require('../../controllers/SignatureController');
 
 const signatureRouter = express.Router();
-export default signatureRouter;
+module.exports = signatureRouter;
 
 signatureRouter.post('/', SignatureController.verify);

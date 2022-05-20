@@ -1,11 +1,10 @@
-import ContractsController from '../../controllers/ContractsController';
-
 const express = require('express');
+const ContractsController = require('../../controllers/ContractsController');
 
 const contractRouter = express.Router();
-export default contractRouter;
+module.exports = contractRouter;
 
 contractRouter.get('/', ContractsController.getAllContracts);
-contractRouter.get('/:id', ContractsController.getOneContract);
+contractRouter.get('/:address', ContractsController.getOneContract);
 
 contractRouter.post('/', ContractsController.addContract);
