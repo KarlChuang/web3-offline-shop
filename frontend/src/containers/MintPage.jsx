@@ -9,15 +9,22 @@ import contractJson from '../../../contract/config/DrinkNFT.json';
 const { abi: contractABI } = contractJson;
 
 function MintPage() {
-  const [nftName, setNftName] = useState('Error');
-  const [mintPrice, setMintPrice] = useState('1000000000');
-  const [priceUnit, setPriceUnit] = useState('ether');
+  // const [nftName, setNftName] = useState('Error');
+  // const [mintPrice, setMintPrice] = useState('1000000000');
+  // const [priceUnit, setPriceUnit] = useState('ether');
   const [mintNum, setMintNum] = useState(-1);
   const { contractAddr } = useParams();
 
+  const [NFT, setNFT] = useState({
+    name: 'Error',
+    mintPrice: '1000000000',
+    priceUnit: 'ether',
+    remain: 0,
+  });
+
   let totalPrice = 0;
   if (Number(mintNum) > 0) {
-    totalPrice = Number(mintPrice) * mintNum;
+    totalPrice = Number(NFT.mintPrice) * mintNum;
   }
 
   useEffect(() => {
@@ -25,16 +32,22 @@ function MintPage() {
       try {
         if (!window.ethereum) throw new Error('No wallet found!');
         const provider = new ethers.providers.Web3Provider(window.ethereum);
-        const contract = new ethers.Contract(contractAddr, contractABI, provider);
-        const name = await contract.name();
-        const price = await contract.mintPrice();
-        setNftName(name);
-        if (price > 1000000000000) {
-          setMintPrice(ethers.utils.formatUnits(price, 'ether'));
+        const contract = new ethers.Contract(
+          contractAddr,
+          contractABI,
+          provider,
+        );
+        const nft = {};
+        nft.name = await contract.name();
+        nft.price = await contract.mintPrice();
+        nft.remain = await contract.getRemainNFTNum();
+        if (nft.price > 1000000000000) {
+          nft.mintPrice = ethers.utils.formatUnits(nft.price, 'ether');
         } else {
-          setMintPrice(ethers.utils.formatUnits(price, 'wei'));
-          setPriceUnit('wei');
+          nft.mintPrice = ethers.utils.formatUnits(nft.price, 'wei');
+          nft.priceUnit = 'wei';
         }
+        setNFT({ ...NFT, ...nft });
         setMintNum(0);
       } catch (err) {
         console.log(err);
@@ -53,7 +66,7 @@ function MintPage() {
       const contract = new ethers.Contract(contractAddr, contractABI, signer);
       if (mintNum > 0) {
         await contract.mintNFT(mintNum, {
-          value: ethers.utils.parseUnits(totalPrice.toString(), priceUnit),
+          value: ethers.utils.parseUnits(totalPrice.toString(), NFT.priceUnit),
         });
       }
     } catch (err) {
@@ -63,13 +76,11 @@ function MintPage() {
 
   return (
     <MintNFT
-      nftName={nftName}
-      mintPriceEther={mintPrice}
+      nft={NFT}
       mintNum={mintNum}
       setMintNum={setMintNum}
       totalPriceEther={totalPrice}
       handleMint={handleMint}
-      priceUnit={priceUnit}
     />
   );
 }

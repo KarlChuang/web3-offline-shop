@@ -4,24 +4,22 @@ import styled from 'styled-components';
 import Waiting from './Waiting';
 
 function MintNFT({
-  nftName,
-  mintPriceEther,
+  nft,
   mintNum,
   setMintNum,
   totalPriceEther,
   handleMint,
-  priceUnit,
 }) {
   if (mintNum < 0) {
     return (<Waiting />);
   }
   return (
     <Display>
-      <NFT>{nftName}</NFT>
+      <NFT>{nft.name}</NFT>
       <CntDiv>
         <Row>
           <div>Mint Price</div>
-          <div>{`${mintPriceEther} ${priceUnit}`}</div>
+          <div>{`${nft.mintPrice} ${nft.priceUnit}`}</div>
         </Row>
         <Row>
           <div>Amount</div>
@@ -30,7 +28,11 @@ function MintNFT({
         <Line />
         <Row>
           <div>Total Price</div>
-          <div>{`${totalPriceEther} ${priceUnit}`}</div>
+          <div>{`${totalPriceEther} ${nft.priceUnit}`}</div>
+        </Row>
+        <Row>
+          <div>Remain NFT</div>
+          <div>{`${nft.remain}`}</div>
         </Row>
       </CntDiv>
       <MintBtn onClick={handleMint}>Mint</MintBtn>

@@ -43,8 +43,8 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
         emit Mint(msg.sender, _tokenIds.current());
     }
 
-    function destroyNFT(uint256 tokenId, bytes memory signature, uint8 message_length) public {
-        string memory message = Strings.toString(tokenId);
+    function destroyNFT(uint256 tokenId, bytes memory signature, string memory message, uint8 message_length) public {
+        // string memory message = Strings.toString(tokenId);
         address signer = verifySignature(message, signature, message_length);
         address owner = ownerOf(tokenId);
 
@@ -113,5 +113,9 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
 
     function setMintPrice(uint256 _mintPrice) public onlyOwner {
         mintPrice = _mintPrice;
+    }
+
+    function getRemainNFTNum() public view returns(uint256) {
+        return mintLimit - _tokenIds.current();
     }
 }

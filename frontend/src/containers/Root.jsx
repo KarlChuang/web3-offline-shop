@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import Router from '../components/Router';
 // import contractAddr from '../../../contract/config/contract-address.json';
 import contractJson from '../../../contract/config/DrinkNFT.json';
+import services from '../api';
 
 // const { DrinkNFT: drinkNftAddr } = contractAddr;
 const { abi: contractABI } = contractJson;
@@ -38,8 +39,12 @@ const getNFTs = async (addr, contractAddrList) => {
       name: `${nftName} #${tokenId.toString()}`,
     }));
   });
-
-  allList = await Promise.all(allList);
+  try {
+    allList = await Promise.all(allList);
+    console.log('list', allList);
+  } catch (err) {
+    console.log('fetch contract error', err);
+  }
   return allList.flat(1);
 };
 
@@ -51,13 +56,9 @@ function Root() {
   useEffect(() => {
     const getAddr = async () => {
       const newAddr = await getAddress();
-      const contractAddrList = [
-        '0x5fbdb2315678afecb367f032d93f642f64180aa3',
-        '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-        '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
-        '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
-      ];
-      // setContractList(contractAddrList);
+      const contracts = await services.contracts.getAll();
+      // console.log('cont', contracts.data);
+      const contractAddrList = contracts.data.map(({ address }) => address);
 
       if (newAddr !== addr) {
         // console.log(addr, '->', newAddr);

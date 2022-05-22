@@ -96,7 +96,7 @@ describe("DrinkNFT contract", function () {
       const msg = tokenId.toString()
       const signature = await signer.signMessage(msg);
       
-      await hardhatDrinkNFT.destroyNFT(tokenId, signature, msg.length);
+      await hardhatDrinkNFT.destroyNFT(tokenId, signature, msg, msg.length);
       const owner_num_after_destroy = await hardhatDrinkNFT.balanceOf(owner.address);
       expect(owner_num_after_destroy).to.equal(0);
     })
@@ -119,13 +119,12 @@ describe("DrinkNFT contract", function () {
 
   describe("Signature Verification", function () {
     it("Should verify the signature", async function () {
-      const msg = "abcdef";
+      let msg = "abcd";
       const signer = owner;
       // Sign the binary data
       const signature = await signer.signMessage(msg);
-
       const sig_address = await hardhatDrinkNFT.verifySignature(msg, signature, msg.length)
-      console.log("address", sig_address)
+      console.log("address", msg)
 
       const address = await signer.getAddress();
       expect(address).to.equal(sig_address)

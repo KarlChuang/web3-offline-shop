@@ -14,8 +14,8 @@ function Shop({
     <Rootwrapper>
       <ContractList>
         {
-          contractList.map(({ contractAddr, name }) => (
-            <ContractBlock key={contractAddr} to={`/mint/${contractAddr}`}>{name}</ContractBlock>
+          contractList && contractList.map(({ address, name }) => (
+            <ContractBlock key={address} to={`/mint/${address}`}>{name}</ContractBlock>
           ))
         }
       </ContractList>

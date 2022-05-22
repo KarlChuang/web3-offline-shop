@@ -5,6 +5,7 @@ import { ethers, ContractFactory } from 'ethers';
 
 import DeployNftContract from '../components/DeployNftContract';
 import contractJson from '../../../contract/config/DrinkNFT.json';
+import services from '../api';
 
 const { abi: contractAbi, bytecode: contractByteCode } = contractJson;
 
@@ -22,7 +23,11 @@ function DeployPage() {
       await window.ethereum.request({ method: 'eth_requestAccounts' });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
       const signer = provider.getSigner();
-      const factory = new ContractFactory(contractAbi, contractByteCode, signer);
+      const factory = new ContractFactory(
+        contractAbi,
+        contractByteCode,
+        signer,
+      );
       const contract = await factory.deploy(
         nftName,
         nftSymbol,
@@ -30,9 +35,17 @@ function DeployPage() {
         Number(nftLimit),
       );
       await contract.deployed();
+
+      await services.contracts.addContract({
+        address: contract.address,
+        name: nftName,
+        symbol: nftSymbol,
+      });
+
       changePageState('');
       console.log('contract address:', contract.address);
     } catch (err) {
+      console.log(err);
       changePageState('');
     }
   };

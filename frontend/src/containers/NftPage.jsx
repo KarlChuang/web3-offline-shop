@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { useParams, useLocation } from 'react-router-dom';
-import axios from 'axios';
 
 import MessageVer from '../components/MessageVer';
 import contractJson from '../../../contract/config/DrinkNFT.json';
+import services from '../api';
 
 const { abi: contractABI } = contractJson;
 
@@ -56,7 +56,11 @@ function NftPage() {
         time: new Date().toString(),
       });
       const { address, signature } = await signMessage(message);
-      const res = await axios.post('/api/check-address', { address, message, signature });
+
+      const res = await services.signatures.verify({ address, message, signature });
+      console.log('res', res);
+      // const res = await axios.post('/api/check-address', { address, message, signature });
+
       setVerify(res.data.valid ? 'Valid' : 'Invalid');
       setMsg(res.data.message);
     } catch (err) {
