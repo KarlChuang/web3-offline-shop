@@ -54,6 +54,10 @@ const Signature = sequelize.define('Signature', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  message: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   contractAddress: {
     type: DataTypes.STRING,
     allowNull: false,

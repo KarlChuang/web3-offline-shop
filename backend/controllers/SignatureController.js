@@ -24,6 +24,7 @@ class SignatureController {
       } else {
         await db.Signature.create({
           signer: address,
+          message,
           contractAddress: contractAddr,
           tokenId: nftId,
           digest: signature,
