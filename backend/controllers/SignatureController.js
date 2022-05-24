@@ -6,6 +6,15 @@ const { abi: contractABI } = require('../../contract/config/DrinkNFT.json');
 const { provider, signer } = require('../config');
 
 class SignatureController {
+  static async getAll(req, res) {
+    try {
+      const signatures = await db.Signature.findAll();
+      res.status(200).json(signatures);
+    } catch (err) {
+      res.status(500);
+    }
+  }
+
   static async verify(req, res) {
     try {
       const {
