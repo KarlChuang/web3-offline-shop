@@ -8,8 +8,14 @@ const { provider, signer } = require('../config');
 class SignatureController {
   static async verify(req, res) {
     try {
-      const { address, message, signature } = req.body;
-      const { time, contractAddr, nftId } = JSON.parse(message);
+      const {
+        address,
+        message,
+        signature,
+        contractAddr,
+        time,
+      } = req.body;
+      const nftId = Number(message);
       const signerAddr = await ethers.utils.verifyMessage(message, signature);
 
       const contract = new ethers.Contract(contractAddr, contractABI, provider);
@@ -42,6 +48,7 @@ class SignatureController {
         res.json({ valid: true, message: '(͠≖ ͜ʖ͠≖)👌' });
       }
     } catch (err) {
+      console.log(err);
       res.json({ valid: false, message: err });
     }
   }

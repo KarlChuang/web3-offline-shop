@@ -50,14 +50,16 @@ function NftPage() {
   const handleOnVerify = async () => {
     try {
       setVerify('');
-      const message = JSON.stringify({
-        contractAddr,
-        nftId,
-        time: new Date().toString(),
-      });
+      const message = nftId.toString();
       const { address, signature } = await signMessage(message);
 
-      const res = await services.signatures.verify({ address, message, signature });
+      const res = await services.signatures.verify({
+        address,
+        message,
+        signature,
+        contractAddr,
+        time: new Date().toString(),
+      });
       console.log('res', res);
       // const res = await axios.post('/api/check-address', { address, message, signature });
 

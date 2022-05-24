@@ -40,12 +40,8 @@ const getNFTs = async (addr, contractAddrList) => {
       used: false,
     }));
   });
-  try {
-    allList = await Promise.all(allList);
-    console.log('list', allList);
-  } catch (err) {
-    console.log('fetch contract error', err);
-  }
+  allList = await Promise.all(allList);
+  // console.log('list', allList);
   return allList.flat(1);
 };
 

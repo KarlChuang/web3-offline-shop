@@ -22,17 +22,13 @@ function MintNFT({
           <div>{`${nft.mintPrice} ${nft.priceUnit}`}</div>
         </Row>
         <Row>
-          <div>Amount</div>
+          <div>{`Amount (${nft.remain} left)`}</div>
           <NumInput type="number" value={mintNum} onChange={(e) => setMintNum(e.target.value)} />
         </Row>
         <Line />
         <Row>
           <div>Total Price</div>
           <div>{`${totalPriceEther} ${nft.priceUnit}`}</div>
-        </Row>
-        <Row>
-          <div>Remain NFT</div>
-          <div>{`${nft.remain}`}</div>
         </Row>
       </CntDiv>
       <MintBtn onClick={handleMint}>Mint</MintBtn>

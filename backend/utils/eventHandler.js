@@ -11,9 +11,9 @@ const filter = {
 
 // Define contract on global variable
 async function contractEventHandler() {
-  // const drinkContract = new ethers.Contract(DrinkNFT, contractABI, provider);
-
+  const startBlockNumber = await provider.getBlockNumber();
   provider.on(filter, async (result) => {
+    if (result.blockNumber <= startBlockNumber) return;
     const contractAddress = result.address;
     const [, rawSender, rawTokenId] = result.topics;
     // TODO: Check sender

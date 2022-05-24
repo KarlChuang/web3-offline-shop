@@ -68,6 +68,7 @@ function MintPage() {
         await contract.mintNFT(mintNum, {
           value: ethers.utils.parseUnits(totalPrice.toString(), NFT.priceUnit),
         });
+        window.location.href = '/';
       }
     } catch (err) {
       console.log(err);
