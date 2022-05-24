@@ -37,6 +37,7 @@ const getNFTs = async (addr, contractAddrList) => {
     return nftIds.map((tokenId) => ({
       id: `${contractAddr}/${tokenId.toString()}`,
       name: `${nftName} #${tokenId.toString()}`,
+      used: false,
     }));
   });
   try {

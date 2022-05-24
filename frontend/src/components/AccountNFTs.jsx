@@ -11,11 +11,11 @@ function AccountNFTs({
   return (
     <NftList>
       {
-        nftList.map(({ id, name }) => (
+        nftList.map(({ id, name, used }) => ((used) ? (null) : (
           <NftBlock key={id} to={`/nft/${id}`} state={{ nftName: name }}>
             {name}
           </NftBlock>
-        ))
+        )))
       }
     </NftList>
   );
