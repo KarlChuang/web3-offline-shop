@@ -13,7 +13,7 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     // Declare Variables
     uint256 public mintPrice = 0.03 ether;
     uint256 public mintLimit;
-    uint256 public bonusThreshold;
+    uint256 public bonusThreshold = 0; // 0 indicates the contract have no bonus mechanism
     uint256 public bonusNum = 1;
 
     string public imageURI;
@@ -77,16 +77,23 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     function mintNFT(uint256 tokenQuantity) public payable {
         require(mintPrice * tokenQuantity <= msg.value, "Not enough ether.");
         require(_tokenIds.current() < mintLimit, "No NFT can be mint.");
+        address minter = msg.sender;
 
         for (uint256 i = 0; i < tokenQuantity; i++) {
             _tokenIds.increment();
             uint256 newItemId = _tokenIds.current();
-            _safeMint(msg.sender, newItemId);
+            _safeMint(minter, newItemId);
+
+            bonus[minter] += 1;
+            if (bonusThreshold > 0 && bonus[minter] >= bonusThreshold) {
+                // Free mint new NFT
+                delegateMintNFT(bonusNum, minter);
+                bonus[minter] -= bonusThreshold;
+            }
         }
     }
 
     function delegateMintNFT(uint256 tokenQuantity, address target) public payable {
-        require(mintPrice * tokenQuantity <= msg.value, "Not enough ether.");
         require(_tokenIds.current() < mintLimit, "No NFT can be mint.");
 
         for (uint256 i = 0; i < tokenQuantity; i++) {
@@ -106,22 +113,13 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
         
         uint256 message_length = 42 + token_length;
 
-        // console.logString(message);
         address signer = verifySignature(message, signature, message_length);
         address owner = ownerOf(tokenId);
-        // console.logAddress(signer);
-        // console.logAddress(owner);
 
         require(signer == owner, "Signer and NFT owner not match.");
 
         _burn(tokenId);
-        bonus[signer] += 1;
-
-        if (bonus[signer] >= bonusThreshold) {
-            // Free mint new NFT
-            delegateMintNFT(bonusNum, signer);
-            bonus[signer] -= bonusThreshold;
-        }
+        
         emit Burn(msg.sender, tokenId);
     }
 
