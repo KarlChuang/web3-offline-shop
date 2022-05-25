@@ -15,6 +15,10 @@ function DeployNftContract({
   changeLimitChange,
   nftImage,
   changeImage,
+  offerAble,
+  changeOfferAble,
+  offerNum,
+  changeOfferNum,
   handleDeploy,
 }) {
   if (pageState === 'loading') {
@@ -33,6 +37,24 @@ function DeployNftContract({
       </Row>
       <Title>Limit</Title>
       <Input type="number" value={nftLimit} onChange={(e) => changeLimitChange(e.target.value)} />
+      <Title>Special Offers</Title>
+      <Row>
+        <Switch>
+          <SwitchInput
+            type="checkbox"
+            value={offerAble}
+            onChange={(e) => changeOfferAble((e.target.value === 'off') ? 'on' : 'off')}
+          />
+          <Slider offer={offerAble} />
+        </Switch>
+        <InputEther
+          offer={offerAble}
+          type="number"
+          value={offerNum}
+          onChange={(e) => changeOfferNum(e.target.value)}
+        />
+        <ValueUnit offer={offerAble}>for 1</ValueUnit>
+      </Row>
       <Title>Image</Title>
       <InputImg
         type="file"
@@ -97,8 +119,10 @@ const Input = styled.input`
 `;
 
 const InputEther = styled(Input)`
+  width: 0;
   flex-grow: 1;
   margin: 0;
+  display: ${({ offer }) => ((offer === 'off') ? 'none' : 'inline-block')}
 `;
 
 const InputImg = styled(Input)`
@@ -111,6 +135,8 @@ const ValueUnit = styled.div`
   font-weight: 900;
   color: white;
   padding-left: 5px;
+  white-space: nowrap;
+  display: ${({ offer }) => ((offer === 'off') ? 'none' : 'block')}
 `;
 
 const ImgPreview = styled.img`
@@ -135,5 +161,43 @@ const DeployBtn = styled.button`
   &:active {
     background-color: white;
     transition: 0s ease;
+  }
+`;
+
+const Switch = styled.label`
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+`;
+
+const SwitchInput = styled.input`
+  opacity: 0;
+  width: 0;
+  height: 0;
+`;
+
+const Slider = styled.span`
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: ${({ offer }) => ((offer === 'off') ? '#ccc' : '#2196F3')};
+  -webkit-transition: .4s;
+  transition: .4s;
+  &:before {
+    position: absolute;
+    content: "";
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    -webkit-transition: .4s;
+    transition: .4s;
+    transform: ${({ offer }) => ((offer === 'off') ? 'translateX(0)' : 'translateX(26px)')};
   }
 `;

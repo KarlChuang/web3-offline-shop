@@ -15,6 +15,8 @@ function DeployPage() {
   const [nftMintPrice, changeMintPriceChange] = useState('');
   const [nftLimit, changeLimitChange] = useState('');
   const [nftImage, changeImage] = useState(undefined);
+  const [offerAble, changeOfferAble] = useState('off');
+  const [offerNum, changeOfferNum] = useState(0);
   const [pageState, changePageState] = useState('');
 
   const handleDeploy = async () => {
@@ -68,6 +70,10 @@ function DeployPage() {
       changeLimitChange={changeLimitChange}
       nftImage={nftImage}
       changeImage={changeImage}
+      offerAble={offerAble}
+      changeOfferAble={changeOfferAble}
+      offerNum={offerNum}
+      changeOfferNum={changeOfferNum}
       handleDeploy={handleDeploy}
     />
   );
