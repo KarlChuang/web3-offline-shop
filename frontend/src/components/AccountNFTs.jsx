@@ -11,12 +11,19 @@ function AccountNFTs({
   return (
     <NftList>
       {
-        nftList.map(({ id, name, used }) => ((used) ? (null) : (
-          <NftBlock key={id} to={`/nft/${id}`} state={{ nftName: name }}>
+        nftList.map(({
+          id, name, used, imageUri,
+        }) => ((used) ? (
+          <NftUsedBlock key={id} img={imageUri}>
+            {name}
+          </NftUsedBlock>
+        ) : (
+          <NftBlock key={id} to={`/nft/${id}`} state={{ nftName: name, imageUri }} img={imageUri}>
             {name}
           </NftBlock>
         )))
       }
+      <NftUsedBlock key="test" img="https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf">test</NftUsedBlock>
     </NftList>
   );
 }
@@ -31,18 +38,18 @@ const NftList = styled.div`
 const NftBlock = styled(Link)`
   color: white;
   width: 100%;
+  height: 150px;
   background: transparent;
   text-align: center;
   align-items: center;
   display: flex;
+  justify-content: flex-end;
   flex-direction: column;
   margin-top: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  border-radius: 10px;
   border-style: solid;
+  border-width: 1px;
   border-color: white;
-  border-radius: 6px;
-  border-width: 2px;
   word-break: break-word;
   transition: 0.2s ease;
   cursor: pointer;
@@ -51,11 +58,41 @@ const NftBlock = styled(Link)`
   user-select: none;
   font-size: 20px;
   font-weight: 900;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+  background-size: 100% auto;
+  background-position: 50% 50%;
   &:hover {
-    background-color: white;
-    color: #6b0600;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+    background-size: 150% auto;
+    background-position: 50% 50%;
   }
   &:active {
-    background-color: white;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+    background-size: 150% auto;
+    background-position: 50% 50%;
   }
+`;
+
+const NftUsedBlock = styled.div`
+  color: #ffffff59;
+  width: 100%;
+  height: 75px;
+  text-align: center;
+  align-items: center;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: column;
+  margin-top: 20px;
+  border-radius: 10px;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #ffffff6e;
+  word-break: break-word;
+  position: relative;
+  user-select: none;
+  font-size: 20px;
+  font-weight: 900;
+  background: linear-gradient(rgba(107, 27, 16, 0.4), rgba(107, 27, 16, 0.9)), url(${({ img }) => img});
+  background-size: 100% auto;
+  background-position: 50% 50%;
 `;

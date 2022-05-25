@@ -5,6 +5,7 @@ import Waiting from './Waiting';
 
 function MessageVer({
   name,
+  imageUri,
   verify,
   verifyMsg,
   handleOnVer,
@@ -12,15 +13,17 @@ function MessageVer({
   return (
     <Rootwrapper valid={verify === 'Valid'}>
       {
-      (verify === '') ? (
-        <Waiting />
-      ) : (
-        <Display>
-          <Btn valid={verify === 'Valid'} onClick={handleOnVer}>{name}</Btn>
-          <Message>{verifyMsg}</Message>
-        </Display>
-      )
-    }
+        (verify === '') ? (
+          <Waiting />
+        ) : (
+          <Display>
+            <Btn valid={verify === 'Valid'} onClick={handleOnVer} img={imageUri}>
+              {name}
+            </Btn>
+            <Message>{verifyMsg}</Message>
+          </Display>
+        )
+      }
     </Rootwrapper>
   );
 }
@@ -53,15 +56,16 @@ const Message = styled.div`
 `;
 
 const Btn = styled.button`
-  color: ${({ valid }) => (valid ? '#3e5d19' : '#6b0600')};
-  background: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  text-align: center;
+  color: white;
   height: 300px;
   width: 100%;
   padding: 10px 20px;
-  border-color: white;
-  border-radius: 6px;
-  border-width: 2px;
-  border-style: solid;
+  border-radius: 15px;
   font-size: 30px;
   font-weight: 900;
   font-family: 'Ubuntu', sans-serif;
@@ -69,7 +73,12 @@ const Btn = styled.button`
   transition: 0.25s ease;
   position: relative;
   user-select: none;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+  background-size: 100% auto;
+  background-position: 50% 50%;
   &:active {
-    background-color: ${({ valid }) => (valid ? '#3e5d19' : '#6b0600')};
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+    background-size: 150% auto;
+    background-position: 50% 50%;
   }
 `;

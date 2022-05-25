@@ -13,6 +13,8 @@ function DeployNftContract({
   changeMintPriceChange,
   nftLimit,
   changeLimitChange,
+  nftImage,
+  changeImage,
   handleDeploy,
 }) {
   if (pageState === 'loading') {
@@ -31,6 +33,13 @@ function DeployNftContract({
       </Row>
       <Title>Limit</Title>
       <Input type="number" value={nftLimit} onChange={(e) => changeLimitChange(e.target.value)} />
+      <Title>Image</Title>
+      <InputImg
+        type="file"
+        accept="image/*"
+        onChange={(e) => changeImage(e.target.files[0] || undefined)}
+      />
+      <ImgPreview src={nftImage && URL.createObjectURL(nftImage)} />
       <DeployBtn onClick={handleDeploy}>Deploy Contract</DeployBtn>
     </Rootwrapper>
   );
@@ -92,11 +101,20 @@ const InputEther = styled(Input)`
   margin: 0;
 `;
 
+const InputImg = styled(Input)`
+  font-size: 15px;
+  height: 25px;
+`;
+
 const ValueUnit = styled.div`
   font-size: 17px;
   font-weight: 900;
   color: white;
   padding-left: 5px;
+`;
+
+const ImgPreview = styled.img`
+  width: 80%;
 `;
 
 const DeployBtn = styled.button`
@@ -105,6 +123,7 @@ const DeployBtn = styled.button`
   padding: 10px 20px;
   border: none;
   margin-top: 30px;
+  margin-bottom: 30px;
   width: 70%;
   font-size: 20px;
   border-radius: 50px;

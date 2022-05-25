@@ -20,6 +20,7 @@ function MintPage() {
     mintPrice: '1000000000',
     priceUnit: 'ether',
     remain: 0,
+    imageUri: '',
   });
 
   let totalPrice = 0;
@@ -47,7 +48,7 @@ function MintPage() {
           nft.mintPrice = ethers.utils.formatUnits(nft.price, 'wei');
           nft.priceUnit = 'wei';
         }
-        setNFT({ ...NFT, ...nft });
+        setNFT({ ...NFT, ...nft, imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf' });
         setMintNum(0);
       } catch (err) {
         console.log(err);

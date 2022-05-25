@@ -38,6 +38,7 @@ const getNFTs = async (addr, contractAddrList) => {
       id: `${contractAddr}/${tokenId.toString()}`,
       name: `${nftName} #${tokenId.toString()}`,
       used: false,
+      imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf',
     }));
   });
   allList = await Promise.all(allList);

@@ -14,8 +14,8 @@ function Shop({
     <Rootwrapper>
       <ContractList>
         {
-          contractList && contractList.map(({ address, name }) => (
-            <ContractBlock key={address} to={`/mint/${address}`}>{name}</ContractBlock>
+          contractList && contractList.map(({ address, name, imageUri }) => (
+            <ContractBlock key={address} to={`/mint/${address}`} img={imageUri}>{name}</ContractBlock>
           ))
         }
       </ContractList>
@@ -45,18 +45,18 @@ const ContractList = styled.div`
 const ContractBlock = styled(Link)`
   color: white;
   width: 100%;
+  height: 150px;
   background: transparent;
   text-align: center;
   align-items: center;
   display: flex;
+  justify-content: flex-end;
   flex-direction: column;
   margin-top: 20px;
-  padding-top: 20px;
-  padding-bottom: 20px;
+  border-radius: 10px;
   border-style: solid;
+  border-width: 1px;
   border-color: white;
-  border-radius: 6px;
-  border-width: 2px;
   word-break: break-word;
   transition: 0.2s ease;
   cursor: pointer;
@@ -65,11 +65,17 @@ const ContractBlock = styled(Link)`
   user-select: none;
   font-size: 20px;
   font-weight: 900;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+  background-size: 100% auto;
+  background-position: 50% 50%;
   &:hover {
-    background-color: white;
-    color: #6b0600;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+    background-size: 150% auto;
+    background-position: 50% 50%;
   }
   &:active {
-    background-color: white;
+    background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+    background-size: 150% auto;
+    background-position: 50% 50%;
   }
 `;

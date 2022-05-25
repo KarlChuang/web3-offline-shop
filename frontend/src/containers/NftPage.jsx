@@ -23,11 +23,13 @@ function NftPage() {
   const [verify, setVerify] = useState('');
   const [verifyMsg, setMsg] = useState('Click to verify');
   const [nftName, setNftName] = useState('');
+  const [imageUri, setImageUri] = useState('');
   const { contractAddr, nftId } = useParams();
 
   useEffect(() => {
     if (state) {
       setNftName(state.nftName);
+      setImageUri(state.imageUri);
       setVerify('Invalid');
     } else {
       const fetchNftName = async () => {
@@ -37,6 +39,7 @@ function NftPage() {
           const contract = new ethers.Contract(contractAddr, contractABI, provider);
           const name = await contract.name();
           setNftName(`${name} #${nftId}`);
+          setImageUri('https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf');
           setVerify('Invalid');
         } catch (err) {
           console.log(err);
@@ -75,6 +78,7 @@ function NftPage() {
   return (
     <MessageVer
       name={nftName}
+      imageUri={imageUri}
       verify={verify}
       verifyMsg={verifyMsg}
       handleOnVer={handleOnVerify}

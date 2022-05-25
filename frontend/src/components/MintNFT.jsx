@@ -4,7 +4,9 @@ import styled from 'styled-components';
 import Waiting from './Waiting';
 
 function MintNFT({
-  nft,
+  nft: {
+    name, mintPrice, priceUnit, remain, imageUri,
+  },
   mintNum,
   setMintNum,
   totalPriceEther,
@@ -15,20 +17,20 @@ function MintNFT({
   }
   return (
     <Display>
-      <NFT>{nft.name}</NFT>
+      <NFT img={imageUri}>{name}</NFT>
       <CntDiv>
         <Row>
           <div>Mint Price</div>
-          <div>{`${nft.mintPrice} ${nft.priceUnit}`}</div>
+          <div>{`${mintPrice} ${priceUnit}`}</div>
         </Row>
         <Row>
-          <div>{`Amount (${nft.remain} left)`}</div>
+          <div>{`Amount (${remain} left)`}</div>
           <NumInput type="number" value={mintNum} onChange={(e) => setMintNum(e.target.value)} />
         </Row>
         <Line />
         <Row>
           <div>Total Price</div>
-          <div>{`${totalPriceEther} ${nft.priceUnit}`}</div>
+          <div>{`${totalPriceEther} ${priceUnit}`}</div>
         </Row>
       </CntDiv>
       <MintBtn onClick={handleMint}>Mint</MintBtn>
@@ -45,23 +47,25 @@ const Display = styled.div`
 `;
 
 const NFT = styled.div`
-  color: #6b0600;
+  color: white;
   display: flex;
   text-align: center;
   align-items: center;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: flex-end;
   background: white;
   height: 300px;
   width: 100%;
-  border-radius: 6px;
+  border-radius: 15px;
   font-size: 30px;
   font-weight: 900;
   font-family: 'Ubuntu', sans-serif;
-  cursor: pointer;
   transition: 0.25s ease;
   position: relative;
   user-select: none;
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.9)), url(${({ img }) => img});
+  background-size: 100% auto;
+  background-position: 50% 50%;
 `;
 
 const CntDiv = styled.div`
