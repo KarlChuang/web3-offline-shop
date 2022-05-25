@@ -55,6 +55,8 @@ async function main() {
     config.symbol,
     config.price,
     config.limit,
+    '',
+    3,
   );
   await drinkNFT.deployed();
 

@@ -25,11 +25,12 @@ const getNFTs = async (addr, contractAddrList) => {
   if (!window.ethereum) throw new Error('No wallet found!');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-  console.log('TODO: Get all image of NFTs');
+  // console.log('TODO: Get all image of NFTs');
   let allList = contractAddrList.map(async (contractAddr) => {
     const contract = new ethers.Contract(contractAddr, contractABI, provider);
     const nftName = await contract.name();
     const nftNum = await contract.balanceOf(addr);
+    const imageUri = await contract.getImageURI();
     const tasks = [];
     for (let i = 0; i < nftNum; i += 1) {
       tasks.push(contract.tokenOfOwnerByIndex(addr, i));
@@ -39,7 +40,8 @@ const getNFTs = async (addr, contractAddrList) => {
       id: `${contractAddr}/${tokenId.toString()}`,
       name: `${nftName} #${tokenId.toString()}`,
       used: false,
-      imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf',
+      imageUri,
+      // imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf',
     }));
   });
   allList = await Promise.all(allList);

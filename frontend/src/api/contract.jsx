@@ -5,8 +5,8 @@ const contracts = (instance) => ({
   getOne({ id }) {
     return instance.get(`/contracts/${id}`);
   },
-  addContract({ address, name, symbol }) {
-    return instance.post('/contracts', { address, name, symbol });
+  addContract(contractData) {
+    return instance.post('/contracts', contractData);
   },
 });
 export default contracts;

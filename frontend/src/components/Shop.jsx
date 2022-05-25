@@ -14,7 +14,7 @@ function Shop({
     <Rootwrapper>
       <ContractList>
         {
-          contractList && contractList.map(({ address, name, imageUri }) => (
+          contractList && contractList.map(({ address, name, uri: imageUri }) => (
             <ContractBlock key={address} to={`/mint/${address}`} img={imageUri}>{name}</ContractBlock>
           ))
         }

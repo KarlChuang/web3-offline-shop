@@ -38,8 +38,9 @@ function MintPage() {
         nft.name = await contract.name();
         nft.price = await contract.mintPrice();
         nft.remain = await contract.getRemainNFTNum();
-        console.log('TODO: get NFT image URI');
-        nft.imageUri = 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf';
+        // console.log('TODO: get NFT image URI');
+        // nft.imageUri = 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf';
+        nft.imageUri = await contract.getImageURI();
         if (nft.price > 1000000000000) {
           nft.mintPrice = ethers.utils.formatUnits(nft.price, 'ether');
         } else {

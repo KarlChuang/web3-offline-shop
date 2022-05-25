@@ -38,9 +38,11 @@ function NftPage() {
           const provider = new ethers.providers.Web3Provider(window.ethereum);
           const contract = new ethers.Contract(contractAddr, contractABI, provider);
           const name = await contract.name();
+          const imgUri = await contract.getImageURI();
           setNftName(`${name} #${nftId}`);
-          console.log('TODO: get Image URI');
-          setImageUri('https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf');
+          // console.log('TODO: get Image URI');
+          // setImageUri('https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf');
+          setImageUri(imgUri);
           setVerify('Invalid');
         } catch (err) {
           console.log(err);
@@ -54,7 +56,7 @@ function NftPage() {
   const handleOnVerify = async () => {
     try {
       setVerify('');
-      const message = nftId.toString();
+      const message = `${contractAddr.toLowerCase()}${nftId.toString()}`;
       const { address, signature } = await signMessage(message);
 
       const res = await services.signatures.verify({

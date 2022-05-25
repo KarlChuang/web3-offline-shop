@@ -13,6 +13,7 @@
     "serve": "nodemon --experimental-specifier-resolution=node ./backend/index.js",
     "deploy": "node ./frontend/utils/deploy.js",
     "test": "hardhat test",
+    "contract:compile": "npx hardhat compile; mkdir contract/config; cp contract/artifacts/contracts/DrinkNFT.sol/DrinkNFT.json contract/config/",
     "contract:deploy": "npx hardhat run contract/scripts/deploy.js --network localhost",
     "contract:mint": "npx hardhat run contract/scripts/mintNFT.js --network localhost",
     "lint": "./node_modules/.bin/eslint ./frontend/src/**/*.jsx --fix; ./node_modules/.bin/eslint ./backend --fix",

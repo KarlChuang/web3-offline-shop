@@ -35,27 +35,29 @@ function DeployPage() {
       );
 
       const added = await client.add(NFT.image);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      console.log('ipfs:', url);
-
-      console.log('TODO: add offer and image URI when deploying contract');
+      const uri = `https://ipfs.infura.io/ipfs/${added.path}`;
+      // console.log('ipfs:', uri);
+      console.log('TODO: bonus threshold when \'off\'');
       const contract = await factory.deploy(
         NFT.name,
         NFT.symbol,
         ethers.utils.parseEther(NFT.mintPrice),
         Number(NFT.limit),
+        uri,
+        (NFT.offerAble === 'off') ? 100000 : Number(NFT.offerNum),
       );
       await contract.deployed();
 
-      console.log('TODO: send image URI to backend');
+      // console.log('TODO: send image URI to backend');
       await services.contracts.addContract({
         address: contract.address,
         name: NFT.name,
         symbol: NFT.symbol,
+        uri,
       });
 
       changePageState('');
-      console.log('contract address:', contract.address);
+      // console.log('contract address:', contract.address);
     } catch (err) {
       console.log(err);
       changePageState('');
