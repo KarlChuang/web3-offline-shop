@@ -35,6 +35,7 @@ describe("DrinkNFT contract", function () {
     const owner_num = await hardhatDrinkNFT.balanceOf(owner.address);
     expect(owner_num).to.equal(mint_num);
   }
+
   // `beforeEach` will run before each test, re-deploying the contract every
   // time. It receives a callback, which can be async.
   beforeEach(async function () {
@@ -45,15 +46,14 @@ describe("DrinkNFT contract", function () {
     // To deploy our contract, we just have to call DrinkNFT.deploy() and await
     // for it to be deployed(), which happens once its transaction has been
     // mined.
-    const name_ = "NFT"
-    const symbol_ = "Trash"
+    const name = "NFT"
+    const symbol = "Trash"
     const price = 3;
     const limit = 50;
-    hardhatDrinkNFT = await DrinkNFT.deploy(name_, symbol_, price, limit);
+    const imageURI = 'https://gg.com';
+    const bonusThreshold = 10;
+    hardhatDrinkNFT = await DrinkNFT.deploy(name, symbol, price, limit, imageURI, bonusThreshold);
     await hardhatDrinkNFT.setMintPrice(0);
-
-    const name = await hardhatDrinkNFT.name()
-    console.log("Name: ", name)
 
   });
 
@@ -93,10 +93,12 @@ describe("DrinkNFT contract", function () {
 
       const signer = owner;
       // Sign the binary data
-      const msg = tokenId.toString()
+      const msg = hardhatDrinkNFT.address.toLowerCase() + String(tokenId).padStart(64, '0')
+      console.log(msg.length)
+      console.log(msg)
       const signature = await signer.signMessage(msg);
       
-      await hardhatDrinkNFT.destroyNFT(tokenId, signature, msg, msg.length);
+      await hardhatDrinkNFT.destroyNFT(tokenId, signature);
       const owner_num_after_destroy = await hardhatDrinkNFT.balanceOf(owner.address);
       expect(owner_num_after_destroy).to.equal(0);
     })
@@ -123,7 +125,7 @@ describe("DrinkNFT contract", function () {
       const signer = owner;
       // Sign the binary data
       const signature = await signer.signMessage(msg);
-      const sig_address = await hardhatDrinkNFT.verifySignature(msg, signature, msg.length)
+      const sig_address = await hardhatDrinkNFT.verifySignature(msg, signature)
       console.log("address", msg)
 
       const address = await signer.getAddress();
