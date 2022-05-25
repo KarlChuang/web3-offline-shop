@@ -14,6 +14,7 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     uint256 public mintPrice = 0.03 ether;
     uint256 public mintLimit;
     uint256 public bonusThreshold;
+    uint256 public bonus_num = 1;
 
     string public imageURI;
 
@@ -37,8 +38,28 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     }
 
     // Events
-    event Mint(address indexed _from, uint256 indexed _id);
     event Burn(address indexed _from, uint256 indexed _id);
+
+    // Getter functions
+    function getImageURI() public view returns (string memory) {
+        return imageURI;
+    }
+
+    function getUserBonus(address userAddress) public view returns (uint256) {
+        // console.logAddress(userAddress);
+        return bonus[userAddress];
+    }
+
+    function getRemainNFTNum() public view returns (uint256) {
+        return mintLimit - _tokenIds.current();
+    }
+    
+    // Setter functions
+    function setMintPrice(uint256 _mintPrice) public onlyOwner {
+        mintPrice = _mintPrice;
+    }
+
+    // Utility functions
 
     function mintNFT(uint256 tokenQuantity) public payable {
         require(mintPrice * tokenQuantity <= msg.value, "Not enough ether.");
@@ -49,38 +70,59 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
             uint256 newItemId = _tokenIds.current();
             _safeMint(msg.sender, newItemId);
         }
-        emit Mint(msg.sender, _tokenIds.current());
+    }
+
+    function delegateMintNFT(uint256 tokenQuantity, address target) public payable {
+        require(mintPrice * tokenQuantity <= msg.value, "Not enough ether.");
+        require(_tokenIds.current() < mintLimit, "No NFT can be mint.");
+
+        for (uint256 i = 0; i < tokenQuantity; i++) {
+            _tokenIds.increment();
+            uint256 newItemId = _tokenIds.current();
+            _safeMint(target, newItemId);
+        }
     }
 
     function destroyNFT(uint256 tokenId, bytes memory signature) public {
-        address currentContract = address(this);
-        bytes memory message = abi.encodePacked(currentContract, tokenId);
-        console.logBytes(message);
-        address signer = verifySignature(string(message), signature);
+        string memory tokenString;
+        uint256 token_length;
+        string memory currentContract = Strings.toHexString(uint256(uint160(address(this))), 20);
+        (tokenString, token_length) = toString(tokenId);
+
+        string memory message = string(abi.encodePacked(currentContract, tokenString ));
+        
+        uint256 message_length = 42 + token_length;
+
+        // console.logString(message);
+        address signer = verifySignature(message, signature, message_length);
         address owner = ownerOf(tokenId);
-        console.logAddress(signer);
-        console.logAddress(owner);
+        // console.logAddress(signer);
+        // console.logAddress(owner);
 
         require(signer == owner, "Signer and NFT owner not match.");
 
         _burn(tokenId);
+        bonus[signer] += 1;
+
+        if (bonus[signer] >= bonusThreshold) {
+            // Free mint new NFT
+            delegateMintNFT(bonus_num, signer);
+            bonus[signer] -= bonusThreshold;
+        }
         emit Burn(msg.sender, tokenId);
     }
 
-    function getImageURI() public view returns (string memory) {
-        return imageURI;
-    }
+    
 
-    function verifySignature(string memory message, bytes memory signature)
+    function verifySignature(string memory message, bytes memory signature, uint256 message_length)
         public
         pure
         returns (address)
     {
         bytes memory prefix = abi.encodePacked(
-            "\x19Ethereum Signed Message:\n106"
+            "\x19Ethereum Signed Message:\n",
+            Strings.toString(message_length)
         );
-
-        // bytes32 signedMessage = keccak256(bytes.concat(bytes(prefix), bytes(message)));
         bytes32 signedMessage = keccak256(abi.encodePacked(prefix, message));
         address signer = recoverSigner(signedMessage, signature);
         return signer;
@@ -97,7 +139,7 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     }
 
     function splitSignature(bytes memory sig)
-        public
+        internal
         pure
         returns (
             bytes32 r,
@@ -127,12 +169,30 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
 
         // implicitly return (r, s, v)
     }
+    // Utility function referenced from https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/utils/Strings.sol
+    function toString(uint256 value) internal pure returns (string memory, uint256) {
+        // Inspired by OraclizeAPI's implementation - MIT licence
+        // https://github.com/oraclize/ethereum-api/blob/b42146b063c7d6ee1358846c198246239e9360e8/oraclizeAPI_0.4.25.sol
 
-    function setMintPrice(uint256 _mintPrice) public onlyOwner {
-        mintPrice = _mintPrice;
+        if (value == 0) {
+            return ("0", 1);
+        }
+        uint256 temp = value;
+        uint256 digits;
+        uint256 length;
+        while (temp != 0) {
+            digits++;
+            temp /= 10;
+        }
+        length = digits;
+        bytes memory buffer = new bytes(digits);
+        while (value != 0) {
+            digits -= 1;
+            buffer[digits] = bytes1(uint8(48 + uint256(value % 10)));
+            value /= 10;
+        }
+        return (string(buffer), length);
     }
 
-    function getRemainNFTNum() public view returns (uint256) {
-        return mintLimit - _tokenIds.current();
-    }
+    
 }
