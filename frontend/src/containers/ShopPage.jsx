@@ -10,8 +10,8 @@ function ShopPage() {
   const [contractList, setContractList] = useState(undefined);
   useEffect(() => {
     const getContract = async () => {
+      console.log('TODO: Get contract image URI from backend contract list');
       const contracts = await services.contracts.getAll();
-      console.log('contract: ', contracts.data);
       setContractList(contracts.data);
     };
     getContract();

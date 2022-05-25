@@ -39,6 +39,7 @@ function NftPage() {
           const contract = new ethers.Contract(contractAddr, contractABI, provider);
           const name = await contract.name();
           setNftName(`${name} #${nftId}`);
+          console.log('TODO: get Image URI');
           setImageUri('https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf');
           setVerify('Invalid');
         } catch (err) {
@@ -63,9 +64,6 @@ function NftPage() {
         contractAddr,
         time: new Date().toString(),
       });
-      console.log('res', res);
-      // const res = await axios.post('/api/check-address', { address, message, signature });
-
       setVerify(res.data.valid ? 'Valid' : 'Invalid');
       setMsg(res.data.message);
     } catch (err) {

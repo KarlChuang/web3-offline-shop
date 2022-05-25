@@ -10,13 +10,15 @@ const { abi: contractAbi, bytecode: contractByteCode } = contractJson;
 const client = create('https://ipfs.infura.io:5001/api/v0');
 
 function DeployPage() {
-  const [nftName, changeNameChange] = useState('');
-  const [nftSymbol, changeSymbolChange] = useState('');
-  const [nftMintPrice, changeMintPriceChange] = useState('');
-  const [nftLimit, changeLimitChange] = useState('');
-  const [nftImage, changeImage] = useState(undefined);
-  const [offerAble, changeOfferAble] = useState('off');
-  const [offerNum, changeOfferNum] = useState(0);
+  const [NFT, changeNFT] = useState({
+    name: '',
+    symbol: '',
+    mintPrice: '',
+    limit: '',
+    image: undefined,
+    offerAble: 'off',
+    offerNum: '',
+  });
   const [pageState, changePageState] = useState('');
 
   const handleDeploy = async () => {
@@ -31,22 +33,25 @@ function DeployPage() {
         contractByteCode,
         signer,
       );
+
+      const added = await client.add(NFT.image);
+      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
+      console.log('ipfs:', url);
+
+      console.log('TODO: add offer and image URI when deploying contract');
       const contract = await factory.deploy(
-        nftName,
-        nftSymbol,
-        ethers.utils.parseEther(nftMintPrice),
-        Number(nftLimit),
+        NFT.name,
+        NFT.symbol,
+        ethers.utils.parseEther(NFT.mintPrice),
+        Number(NFT.limit),
       );
       await contract.deployed();
 
-      const added = await client.add(nftImage);
-      const url = `https://ipfs.infura.io/ipfs/${added.path}`;
-      console.log(url);
-
+      console.log('TODO: send image URI to backend');
       await services.contracts.addContract({
         address: contract.address,
-        name: nftName,
-        symbol: nftSymbol,
+        name: NFT.name,
+        symbol: NFT.symbol,
       });
 
       changePageState('');
@@ -60,20 +65,8 @@ function DeployPage() {
   return (
     <DeployNftContract
       pageState={pageState}
-      nftName={nftName}
-      changeNameChange={changeNameChange}
-      nftSymbol={nftSymbol}
-      changeSymbolChange={changeSymbolChange}
-      nftMintPrice={nftMintPrice}
-      changeMintPriceChange={changeMintPriceChange}
-      nftLimit={nftLimit}
-      changeLimitChange={changeLimitChange}
-      nftImage={nftImage}
-      changeImage={changeImage}
-      offerAble={offerAble}
-      changeOfferAble={changeOfferAble}
-      offerNum={offerNum}
-      changeOfferNum={changeOfferNum}
+      NFT={NFT}
+      changeNFT={changeNFT}
       handleDeploy={handleDeploy}
     />
   );

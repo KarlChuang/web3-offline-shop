@@ -5,20 +5,8 @@ import Waiting from './Waiting';
 
 function DeployNftContract({
   pageState,
-  nftName,
-  changeNameChange,
-  nftSymbol,
-  changeSymbolChange,
-  nftMintPrice,
-  changeMintPriceChange,
-  nftLimit,
-  changeLimitChange,
-  nftImage,
-  changeImage,
-  offerAble,
-  changeOfferAble,
-  offerNum,
-  changeOfferNum,
+  NFT,
+  changeNFT,
   handleDeploy,
 }) {
   if (pageState === 'loading') {
@@ -27,41 +15,41 @@ function DeployNftContract({
   return (
     <Rootwrapper>
       <Title>Name</Title>
-      <Input value={nftName} onChange={(e) => changeNameChange(e.target.value)} />
+      <Input value={NFT.name} onChange={(e) => changeNFT({ ...NFT, name: e.target.value })} />
       <Title>Symbol</Title>
-      <Input value={nftSymbol} onChange={(e) => changeSymbolChange(e.target.value)} />
+      <Input value={NFT.symbol} onChange={(e) => changeNFT({ ...NFT, symbol: e.target.value })} />
       <Title>Mint Price</Title>
       <Row>
-        <InputEther type="number" value={nftMintPrice} onChange={(e) => changeMintPriceChange(e.target.value)} />
+        <InputEther type="number" value={NFT.mintPrice} onChange={(e) => changeNFT({ ...NFT, mintPrice: e.target.value })} />
         <ValueUnit>ether</ValueUnit>
       </Row>
       <Title>Limit</Title>
-      <Input type="number" value={nftLimit} onChange={(e) => changeLimitChange(e.target.value)} />
+      <Input type="number" value={NFT.limit} onChange={(e) => changeNFT({ ...NFT, limit: e.target.value })} />
       <Title>Special Offers</Title>
       <Row>
         <Switch>
           <SwitchInput
             type="checkbox"
-            value={offerAble}
-            onChange={(e) => changeOfferAble((e.target.value === 'off') ? 'on' : 'off')}
+            value={NFT.offerAble}
+            onChange={(e) => changeNFT({ ...NFT, offerAble: (e.target.value === 'off') ? 'on' : 'off' })}
           />
-          <Slider offer={offerAble} />
+          <Slider offer={NFT.offerAble} />
         </Switch>
         <InputEther
-          offer={offerAble}
+          offer={NFT.offerAble}
           type="number"
-          value={offerNum}
-          onChange={(e) => changeOfferNum(e.target.value)}
+          value={NFT.offerNum}
+          onChange={(e) => changeNFT({ ...NFT, offerNum: e.target.value })}
         />
-        <ValueUnit offer={offerAble}>for 1</ValueUnit>
+        <ValueUnit offer={NFT.offerAble}>for 1</ValueUnit>
       </Row>
       <Title>Image</Title>
       <InputImg
         type="file"
         accept="image/*"
-        onChange={(e) => changeImage(e.target.files[0] || undefined)}
+        onChange={(e) => changeNFT({ ...NFT, image: e.target.files[0] || undefined })}
       />
-      <ImgPreview src={nftImage && URL.createObjectURL(nftImage)} />
+      <ImgPreview src={NFT.image && URL.createObjectURL(NFT.image)} />
       <DeployBtn onClick={handleDeploy}>Deploy Contract</DeployBtn>
     </Rootwrapper>
   );

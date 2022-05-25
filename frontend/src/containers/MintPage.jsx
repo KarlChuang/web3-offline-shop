@@ -9,12 +9,8 @@ import contractJson from '../../../contract/config/DrinkNFT.json';
 const { abi: contractABI } = contractJson;
 
 function MintPage() {
-  // const [nftName, setNftName] = useState('Error');
-  // const [mintPrice, setMintPrice] = useState('1000000000');
-  // const [priceUnit, setPriceUnit] = useState('ether');
   const [mintNum, setMintNum] = useState(-1);
   const { contractAddr } = useParams();
-
   const [NFT, setNFT] = useState({
     name: 'Error',
     mintPrice: '1000000000',
@@ -42,13 +38,15 @@ function MintPage() {
         nft.name = await contract.name();
         nft.price = await contract.mintPrice();
         nft.remain = await contract.getRemainNFTNum();
+        console.log('TODO: get NFT image URI');
+        nft.imageUri = 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf';
         if (nft.price > 1000000000000) {
           nft.mintPrice = ethers.utils.formatUnits(nft.price, 'ether');
         } else {
           nft.mintPrice = ethers.utils.formatUnits(nft.price, 'wei');
           nft.priceUnit = 'wei';
         }
-        setNFT({ ...NFT, ...nft, imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf' });
+        setNFT({ ...NFT, ...nft });
         setMintNum(0);
       } catch (err) {
         console.log(err);

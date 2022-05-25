@@ -23,7 +23,6 @@ function AccountNFTs({
           </NftBlock>
         )))
       }
-      <NftUsedBlock key="test" img="https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf">test</NftUsedBlock>
     </NftList>
   );
 }
