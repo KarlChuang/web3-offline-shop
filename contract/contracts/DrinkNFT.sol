@@ -14,7 +14,7 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     uint256 public mintPrice = 0.03 ether;
     uint256 public mintLimit;
     uint256 public bonusThreshold;
-    uint256 public bonus_num = 1;
+    uint256 public bonusNum = 1;
 
     string public imageURI;
 
@@ -57,6 +57,19 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
     // Setter functions
     function setMintPrice(uint256 _mintPrice) public onlyOwner {
         mintPrice = _mintPrice;
+    }
+
+    function setMintLimit(uint256 _mintLimit) public onlyOwner {
+        mintLimit = _mintLimit;
+    }
+
+    function setImageURI(string memory _imageURI) public onlyOwner {
+        imageURI = _imageURI;
+    }
+
+    function setBonus(uint256 _bonusThreshold, uint256 _bonusNum) public onlyOwner {
+        bonusThreshold = _bonusThreshold;
+        bonusNum = _bonusNum;
     }
 
     // Utility functions
@@ -106,7 +119,7 @@ contract DrinkNFT is ERC721Enumerable, Ownable {
 
         if (bonus[signer] >= bonusThreshold) {
             // Free mint new NFT
-            delegateMintNFT(bonus_num, signer);
+            delegateMintNFT(bonusNum, signer);
             bonus[signer] -= bonusThreshold;
         }
         emit Burn(msg.sender, tokenId);
