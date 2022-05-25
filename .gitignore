@@ -7,5 +7,4 @@ package-lock.json
 .idea
 contract/artifacts
 contract/cache
-contract/config
 yarn-error.log

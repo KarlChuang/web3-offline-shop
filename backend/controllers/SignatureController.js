@@ -3,12 +3,26 @@ require('dotenv').config();
 const { ethers } = require('ethers');
 const db = require('../models');
 const { abi: contractABI } = require('../../contract/config/DrinkNFT.json');
-const { provider, signer } = require('../config');
+const { provider } = require('../config');
 
 class SignatureController {
   static async getAll(req, res) {
     try {
       const signatures = await db.Signature.findAll();
+      res.status(200).json(signatures);
+    } catch (err) {
+      res.status(500);
+    }
+  }
+
+  static async getUserSignatures(req, res) {
+    try {
+      const { address } = req.params;
+      const signatures = await db.Signature.findAll({
+        where: {
+          signer: address,
+        },
+      });
       res.status(200).json(signatures);
     } catch (err) {
       res.status(500);
@@ -45,11 +59,6 @@ class SignatureController {
           tokenId: nftId,
           digest: signature,
         });
-        const contractSigner = contract.connect(signer);
-        await contractSigner.destroyNFT(
-          nftId,
-          signature,
-        );
 
         res.json({ valid: true, message: '(͠≖ ͜ʖ͠≖)👌' });
       }

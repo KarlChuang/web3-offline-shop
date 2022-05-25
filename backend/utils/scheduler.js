@@ -18,17 +18,18 @@ async function sendBurnTransaction(signature) {
 
 // This task run every 10 minutes
 async function runScheduler() {
-  cron.schedule('*/15 * * * *', async () => {
+  cron.schedule('*/1 * * * *', async () => {
     // TODO: Iterate through Redis and repost transaction
     try {
-      const signatures = db.Signature.findAll({});
-      console.log('unhandled signatures: ', signatures);
+      const signatures = await db.Signature.findAll({});
+      console.log(`Scheduler start handle ${signatures.length} signatures`);
 
       const tasks = signatures.map(async (signature) => {
         await sendBurnTransaction(signature);
       });
 
       await Promise.all(tasks);
+      console.log('Finish checking unhandled signatures.');
     } catch (err) {
       console.log(err);
     }

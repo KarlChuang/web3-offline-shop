@@ -2,12 +2,12 @@ const express = require('express');
 const path = require('path');
 const apiRouter = require('./routes/api');
 const contractEventHandler = require('./utils/eventHandler');
-// const runScheduler = require('./utils/scheduler');
+const runScheduler = require('./utils/scheduler');
 
 const port = process.env.PORT;
 
 contractEventHandler();
-// runScheduler();
+runScheduler();
 
 const app = express();
 app.use(express.json());
