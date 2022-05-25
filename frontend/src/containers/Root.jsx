@@ -20,12 +20,11 @@ const getAddress = async () => {
   return address;
 };
 
-const getNFTs = async (addr, contractAddrList) => {
+const getNFTs = async (addr, contractAddrList, sigs) => {
   if (!ethers.utils.isAddress(addr)) return [];
   if (!window.ethereum) throw new Error('No wallet found!');
   const provider = new ethers.providers.Web3Provider(window.ethereum);
 
-  // console.log('TODO: Get all image of NFTs');
   let allList = contractAddrList.map(async (contractAddr) => {
     const contract = new ethers.Contract(contractAddr, contractABI, provider);
     const nftName = await contract.name();
@@ -39,9 +38,9 @@ const getNFTs = async (addr, contractAddrList) => {
     return nftIds.map((tokenId) => ({
       id: `${contractAddr}/${tokenId.toString()}`,
       name: `${nftName} #${tokenId.toString()}`,
-      used: false,
+      used: sigs.some((sig) => ((sig.contractAddress === contractAddr)
+        && (Number(sig.tokenId) === Number(tokenId)))),
       imageUri,
-      // imageUri: 'https://ipfs.io/ipfs/QmPuoyRoWGmjpsbM93zL8BRQzBcFDMrvDLxbYBQvSFk8Mf',
     }));
   });
   allList = await Promise.all(allList);
@@ -57,11 +56,11 @@ function Root() {
       const newAddr = await getAddress();
       const contracts = await services.contracts.getAll();
       const contractAddrList = contracts.data.map(({ address }) => address);
-
+      const sigs = await services.signatures.getAddrSig(newAddr);
       if (newAddr !== addr) {
         setAddr(newAddr);
         try {
-          setNftList(await getNFTs(newAddr, contractAddrList));
+          setNftList(await getNFTs(newAddr, contractAddrList, sigs.data));
         } catch (err) {
           console.log(err);
           setNftList([]);
