@@ -49,12 +49,16 @@ async function main() {
     symbol: '???',
     price: 3,
     limit: 50,
+    imageURI: 'https://gg.com',
+    threshold: 3,
   };
   const drinkNFT = await DrinkNFT.deploy(
     config.name,
     config.symbol,
     config.price,
     config.limit,
+    config.imageURI,
+    config.threshold,
   );
   await drinkNFT.deployed();
 

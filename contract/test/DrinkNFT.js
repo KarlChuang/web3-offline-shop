@@ -41,7 +41,6 @@ describe("DrinkNFT contract", function () {
     const msg = hardhatDrinkNFT.address.toLowerCase() + String(tokenId);
     const signature = await signer.signMessage(msg);
     await hardhatDrinkNFT.destroyNFT(tokenId, signature);
-    
   }
 
   // `beforeEach` will run before each test, re-deploying the contract every
@@ -59,7 +58,7 @@ describe("DrinkNFT contract", function () {
     const price = 3;
     const limit = 50;
     const imageURI = "https://gg.com";
-    const bonusThreshold = 2;
+    const bonusThreshold = 5;
     hardhatDrinkNFT = await DrinkNFT.deploy(
       name,
       symbol,
@@ -92,34 +91,27 @@ describe("DrinkNFT contract", function () {
       await mintNFT(1);
     });
 
-    it("Should mint multiple NFT", async function () {
-      // Mint 5 NFT
-      await mintNFT(5);
+    it("Should mint multiple NFT and add bonus", async function () {
+      // Mint 5 NFT and check bonus
+      await mintNFT(4);
+      await hardhatDrinkNFT.mintNFT(1);
+      const owner_num = await hardhatDrinkNFT.balanceOf(owner.address);
+      expect(owner_num).to.equal(6); // 5 + 1
+
+      let bonus = await hardhatDrinkNFT.getUserBonus(owner.address);
+      expect(bonus).to.equal(0);
     });
   });
   describe("Destroy NFT", function () {
     it("Should destroy NFT", async function () {
       // Mint 1 NFT
-      await mintNFT(2);
-      await burnNFT(tokenId=1);
+      await mintNFT(1);
+      await burnNFT((tokenId = 1));
       let owner_num_after_destroy = await hardhatDrinkNFT.balanceOf(
         owner.address
       );
-      expect(owner_num_after_destroy).to.equal(1);
-      
-      let bonus = await hardhatDrinkNFT.getUserBonus(owner.address);
-      expect(bonus).to.equal(1);
+      expect(owner_num_after_destroy).to.equal(0);
 
-      await burnNFT(tokenId=2);
-      
-      // Bonus checking, since bonusThreshold set to 2, burn 2 token should gain another 1 new token.
-      bonus = await hardhatDrinkNFT.getUserBonus(owner.address);
-      owner_num_after_destroy = await hardhatDrinkNFT.balanceOf(
-        owner.address
-      );
-      expect(bonus).to.equal(0);
-      expect(owner_num_after_destroy).to.equal(1);
-      
     });
   });
 
