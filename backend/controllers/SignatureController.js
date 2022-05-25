@@ -24,7 +24,8 @@ class SignatureController {
         contractAddr,
         time,
       } = req.body;
-      const nftId = Number(message);
+      // 42 is the length of contract address
+      const nftId = Number(message.substr(42));
       const signerAddr = await ethers.utils.verifyMessage(message, signature);
 
       const contract = new ethers.Contract(contractAddr, contractABI, provider);
@@ -45,13 +46,9 @@ class SignatureController {
           digest: signature,
         });
         const contractSigner = contract.connect(signer);
-        // const tokenId = nftId.toString();
-        // console.log('message', typeof(message))
         await contractSigner.destroyNFT(
           nftId,
           signature,
-          message,
-          message.length,
         );
 
         res.json({ valid: true, message: '(͠≖ ͜ʖ͠≖)👌' });

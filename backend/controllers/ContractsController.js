@@ -26,11 +26,14 @@ class ContractsController {
 
   static async addContract(req, res) {
     try {
-      const { address, name, symbol } = req.body;
+      const {
+        address, name, symbol, uri,
+      } = req.body;
       await db.Contract.create({
         address,
         name,
         symbol,
+        uri,
       });
       res.status(200).json('success');
     } catch (err) {

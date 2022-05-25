@@ -7,13 +7,13 @@ const { provider, signer } = require('../config');
 
 async function sendBurnTransaction(signature) {
   const {
-    contractAddress, tokenId, message, digest,
+    contractAddress, tokenId, digest,
   } = signature;
 
   const contract = new ethers.Contract(contractAddress, contractABI, provider);
 
   const contractSigner = contract.connect(signer);
-  await contractSigner.destroyNFT(tokenId, digest, message, message.length);
+  await contractSigner.destroyNFT(tokenId, digest);
 }
 
 // This task run every 10 minutes

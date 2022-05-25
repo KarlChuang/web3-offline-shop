@@ -36,6 +36,10 @@ const Contract = sequelize.define('Contract', {
     allowNull: false,
     unique: true,
   },
+  uri: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
   name: {
     type: DataTypes.STRING,
   },
