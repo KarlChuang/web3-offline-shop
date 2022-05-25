@@ -15,19 +15,30 @@ Once installed, let's run Hardhat's testing network:
 npx hardhat node
 ```
 
-Then, on a new terminal, go to the repository's root folder and run this to
-deploy your contract:
+Then, we can compile the smart contract:
 
 ```sh
-yarn run contract:deploy
+npx hardhat compile
 ```
+
+Or, on a new terminal, go to the repository's root folder and run this to
+compile and deploy your contract:
+
+```sh
+yarn contract:deploy
+```
+
 ### Frontend and Backend (Optional)
-Finally, we can run the frontend with:
+We can compile the frontend with:
 
 ```sh
-yarn run dev
+yarn build:production
 ```
 
+If we want to compile it in development mode, run
+```sh
+yarn dev
+```
 Or, If we want to run frontend and backend at the same time, run
 ```sh
 yarn run build --watch
@@ -36,6 +47,7 @@ Then, open another terminal, and run
 ```sh
 yarn run serve
 ```
+to run the server
 
 ---
 ### Operation

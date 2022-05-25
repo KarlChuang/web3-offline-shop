@@ -71,7 +71,7 @@ function Root() {
 
   return (
     <BrowserRouter
-      basename={process.env.NODE_ENV === 'production' ? '/address-prover/' : ''}
+      basename={process.env.NODE_ENV === 'production' ? '' : ''}
     >
       <Rootwrapper>
         <Router address={addr} nftList={nftList} />
