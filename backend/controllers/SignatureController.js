@@ -55,7 +55,7 @@ class SignatureController {
       }
     } catch (err) {
       console.log(err);
-      res.json({ valid: false, message: err });
+      res.json({ valid: false, message: 'server err' });
     }
   }
 }

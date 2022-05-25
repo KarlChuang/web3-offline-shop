@@ -37,14 +37,14 @@ function DeployPage() {
       const added = await client.add(NFT.image);
       const uri = `https://ipfs.infura.io/ipfs/${added.path}`;
       // console.log('ipfs:', uri);
-      console.log('TODO: bonus threshold when \'off\'');
+      // console.log('TODO: bonus threshold when \'off\'');
       const contract = await factory.deploy(
         NFT.name,
         NFT.symbol,
         ethers.utils.parseEther(NFT.mintPrice),
         Number(NFT.limit),
         uri,
-        (NFT.offerAble === 'off') ? 100000 : Number(NFT.offerNum),
+        (NFT.offerAble === 'off') ? 0 : Number(NFT.offerNum),
       );
       await contract.deployed();
 
