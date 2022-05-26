@@ -1,6 +1,4 @@
-const {
-  Sequelize, DataTypes,
-} = require('sequelize');
+const { Sequelize, DataTypes } = require('sequelize');
 require('dotenv').config();
 
 const DATABASE_URL = process.env.POSTGRES_URL;
@@ -9,14 +7,19 @@ if (!DATABASE_URL) {
   throw new Error('DATABASE_URL environment variable not set!');
 }
 
-const sequelize = new Sequelize(DATABASE_URL, {
-  dialectOptions: {
+let sqlOptions = {};
+const env = process.env.NODE_ENV;
+if (env === 'production') {
+  sqlOptions = {
     ssl: {
       require: true,
       rejectUnauthorized: false,
     },
+  };
+}
 
-  },
+const sequelize = new Sequelize(DATABASE_URL, {
+  dialectOptions: sqlOptions,
 });
 
 // Test authentication
