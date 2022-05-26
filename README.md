@@ -1,59 +1,56 @@
-# Address Provider
+# WEB3 Offline $hop
+## Introduction
+A web3 offline shop that people can choose to be a seller and link their offline business on it or be a customer and buy their favorites as NFT online, exchange NFT to real asset offline in a safe, fast, and decentralized way.
+## Quick start on local environment
 
-## Quick start
-
-### Hadrhat (Smart contract deployment)
-The first things you need to do are installing its dependencies:
-
-```sh
-yarn
+### 1. Install dependency
+The first things we need to do are installing its dependencies:
+```
+yarn install
 ```
 
-Once installed, let's run Hardhat's testing network:
+### 2. Setting environment variables
+Create a `.env` file in the root directory.
 
-```sh
+For example:
+```
+NETWORK_URL=http://localhost:8545
+POSTGRES_URL=postgres://root:example@localhost:5432/postgres
+```
+### 3. Start local database
+Run postgreSQL and pg-admin in docker containers.
+
+By default, postgreSQL will be served on `localhost:5432`, and pg-admin will be served on `localhost:5050`. 
+
+```
+docker-compose up --build
+```
+To know more about pg-admin, see the [pg-admin](#pg-admin) section.
+
+### 4. Start local blockchain
+Run a local private blockchain, which will be served on `localhost:8545` by default. *(ChainId=31337)*
+```
 npx hardhat node
 ```
-
-Then, we can compile the smart contract:
-
-```sh
-npx hardhat compile
+### 5. Compile contracts (Optional)
 ```
-
-Or, on a new terminal, go to the repository's root folder and run this to
-compile and deploy your contract:
-
-```sh
-yarn contract:deploy
+yarn contract:compile
 ```
-
-### Frontend and Backend (Optional)
-We can compile the frontend with:
-
-```sh
-yarn build:production
+This command compile contract to bytecode and [ABI](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html#:~:text=The%20Contract%20Application%20Binary%20Interface,as%20described%20in%20this%20specification.). Frontend DApp need them to interact with contracts on blockchain.
+### 6. Start frontend server
 ```
-
-If we want to compile it in development mode, run
-```sh
-yarn dev
+yarn build --watch
 ```
-Or, If we want to run frontend and backend at the same time, run
-```sh
-yarn run build --watch
+### 7. Start backend server
 ```
-Then, open another terminal, and run 
-```sh
-yarn run serve
+yarn serve
 ```
-to run the server
 
 ---
-### Operation
+## Operation
 Open [http://localhost:5000/](http://localhost:3000/) to see your Dapp. You will
-need to have [Metamask](https://metamask.io) installed and listening to
-`localhost 8545`.
+need to have [Metamask](https://metamask.io) installed and switch Metamask network to
+`localhost 8545`. Also, remember to set the `localhost` network chainID to `31337`.
 
 ### Common problems
 1. Metamask transaction nonce not match
@@ -64,16 +61,11 @@ need to have [Metamask](https://metamask.io) installed and listening to
 ## Test
 We can test the smart contract by running
 ```sh
-npx hardhat test
+yarn test
 ```
 
 
-## Run database
-```sh
-docker-compose up --build
-```
-This command will run postgres and pg-admin in docker containers.
-### pg-admin 
+## pg-admin 
 pg-admin is a GUI that can help developer to manage database.
 
 After running `docker-compose`, enter `localhost:5050` to operate on pg-admin.
