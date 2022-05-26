@@ -6,11 +6,11 @@ const provider = new ethers.providers.JsonRpcProvider(network);
 let signer;
 const env = process.env.NODE_ENV;
 
-if (env === null || env === 'development') {
-  signer = provider.getSigner();
-} else if (env === 'production') {
+if (env && env === 'production') {
   const { PRIVATE_KEY } = process.env;
   signer = new ethers.Wallet(PRIVATE_KEY, provider);
+} else {
+  signer = provider.getSigner();
 }
 
 module.exports = {
