@@ -8,3 +8,4 @@ package-lock.json
 contract/artifacts
 contract/cache
 yarn-error.log
+.env
