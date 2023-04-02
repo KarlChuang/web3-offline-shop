@@ -14,7 +14,7 @@ Create a `.env` file in the root directory.
 
 For example:
 ```
-NETWORK_URL=http://localhost:8545
+NETWORK_URL=http://127.0.0.1:8545
 POSTGRES_URL=postgres://root:example@localhost:5432/postgres
 ```
 ### 3. Start local database
@@ -37,6 +37,10 @@ npx hardhat node
 yarn contract:compile
 ```
 This command compile contract to bytecode and [ABI](https://docs.soliditylang.org/en/v0.8.13/abi-spec.html#:~:text=The%20Contract%20Application%20Binary%20Interface,as%20described%20in%20this%20specification.). Frontend DApp need them to interact with contracts on blockchain.
+```
+yarn contract:deploy
+```
+deploy contract to local private blockchain
 ### 6. Start frontend server
 ```
 yarn build --watch
@@ -48,7 +52,7 @@ yarn serve
 
 ---
 ## Operation
-Open [http://localhost:5000/](http://localhost:3000/) to see your Dapp. You will
+Open [http://localhost:3000/](http://localhost:3000/) to see your Dapp. You will
 need to have [Metamask](https://metamask.io) installed and switch Metamask network to
 `localhost 8545`. Also, remember to set the `localhost` network chainID to `31337`.
 

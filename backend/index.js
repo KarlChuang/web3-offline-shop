@@ -16,6 +16,6 @@ app.use('/api/v1', apiRouter);
 app.get('*/bundle.js', (req, res) => res.sendFile(path.resolve(__dirname, '..', 'frontend', 'dist', 'bundle.js')));
 app.use('*', express.static(path.resolve(__dirname, '..', 'frontend', 'dist')));
 
-app.listen(port || 5000, async () => {
-  console.log(`listening on port ${port || 5000}`);
+app.listen(port || 3000, async () => {
+  console.log(`listening on port ${port || 3000}`);
 });
